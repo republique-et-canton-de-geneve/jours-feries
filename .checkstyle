@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- CTI Melusine 12/2007 -->
+<fileset-config file-format-version="1.2.0" simple-config="true">
+    <fileset name="tous" enabled="true" check-config-name="[CTI] checkstyle rules" local="false">
+        <file-match-pattern match-pattern="." include-pattern="true"/>
+    </fileset>
+</fileset-config>

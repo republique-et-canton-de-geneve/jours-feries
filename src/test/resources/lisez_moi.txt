@@ -1,0 +1,1 @@
+Description des resources nécessaires à l'execution des tests.
