@@ -12,15 +12,19 @@ public class LectureConfig {
 	public LectureConfig() {
 		String base = System.getProperty("jonas.base");
 		File file = null;
+		prop = new Properties();
 		
 		if (base==null || base.equals("")) {
 			base = System.getProperty("distribution.properties");
-			file = new File(base);
+			if (base!=null)
+				file = new File(base);
+			else
+				return;
 		}
 		else
 			file = new File(base + "/Distribution.properties");
 			
-		prop = new Properties();
+		
 		try {
 			prop.load(new FileInputStream(file));
 		}

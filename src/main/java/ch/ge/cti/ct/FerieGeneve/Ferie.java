@@ -50,7 +50,7 @@ public final class Ferie {
 	 */
 	public final static int NOUVEL_AN = 0;
 	/**
-	 * Le jour de la crucifixion de Jï¿½sus : 2 jours avant Pï¿½ques.
+	 * vendredi saint : 2 jours avant Pï¿½ques.
 	 */
 	public final static int VENDREDI_SAINT = 1;
 	/**
@@ -58,11 +58,11 @@ public final class Ferie {
 	 */
 	public final static int LUNDI_PAQUES = 2;
 	/**
-	 * Le jeudi de l'Ascension : Jï¿½sus monte au ciel.
+	 * Le jeudi de l'Ascension
 	 */
 	public final static int ASCENSION = 3;
 	/**
-	 * Lendemain de Pentecï¿½te : annonce la bonne nouvelle de l'avï¿½nement du Saint Esprit.
+	 * Lendemain de Pentecï¿½te 
 	 */
 	public final static int LUNDI_PENTECOTE = 4;
 	/**
@@ -72,12 +72,11 @@ public final class Ferie {
 	 */
 	public final static int FETE_NATIONALE = 5;
 	/**
-	 * Jeï¿½ne genevois : le jeï¿½ne est un acte moral et religieux,
-	 * signe d'humilitï¿½ et d'affliction face aux malheurs du monde.
+	 * Jeï¿½ne genevois
 	 */
 	public final static int JEUNE_GENEVOIS = 6;
 	/**
-	 * Naissance de Jï¿½sus.
+	 * Noel.
 	 */
 	public final static int NOEL = 7;
 	/**
@@ -612,7 +611,7 @@ public final class Ferie {
                break;
          }
          
-         // aprï¿½s 2011 les dates de fermetures sont paramï¿½trï¿½es
+         // aprés 2011 les dates de fermetures sont paramï¿½trï¿½es
          if (pAnnee >= 2011) {
         	 List<Date> joursFermes = getJoursFermesParConseilEtat(pAnnee, pMois);
         	 if (dates != null) { 
