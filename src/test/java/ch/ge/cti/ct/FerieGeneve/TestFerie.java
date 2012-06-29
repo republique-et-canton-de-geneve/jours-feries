@@ -273,7 +273,12 @@ public class TestFerie extends TestCase {
 		assertNull(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, -1));
 		assertNull(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, 99999));
 		
-		assertNull(Ferie.getJourFerie(99,2012));
+		
+		try { 
+			Ferie.getJourFerie(99,2012);
+			fail("exception non levée");
+		}
+		catch (Exception e) {}
 		
 		
 		Date[] dates = Ferie.getJoursFeries(2012);

@@ -377,7 +377,7 @@ public class Ferie {
                break;
 
             default:
-               assert false : pJourFerie;
+            	throw new IllegalArgumentException("pJourFerie demandé n'est pas dans la liste");
          }
       }
       return date;
@@ -653,7 +653,6 @@ public class Ferie {
       }
       else
       {
-         assert false : pMois;
          throw new IllegalArgumentException("L'annï¿½e doit ï¿½tre comprise entre 1 et 10000 et le mois entre Calendar.JANUARY et Calendar.DECEMBER.");
       }
    }
