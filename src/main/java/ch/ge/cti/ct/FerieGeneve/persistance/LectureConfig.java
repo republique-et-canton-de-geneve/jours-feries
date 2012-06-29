@@ -4,61 +4,76 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
-public class LectureConfig {
+import org.apache.log4j.Logger;
+
+public final class LectureConfig {
 	private static Properties prop;
-	private static Object flagsynchrone__ = new Object();
-	
-	private LectureConfig() {
-		
+	private static Logger LOG = Logger.getLogger(LectureConfig.class);
+
+	static {
+		prop = init();
 	}
-	
+
+	private LectureConfig() {
+
+	}
+
 	/* (non-Javadoc)
 	 * @see ch.ge.cti.ct.FerieGeneve.persistance.LecteurJourFerie#getFerie(int)
 	 */
-	public static String[] getFerie(int annee) {
+	public static final String[] getFerie(int annee) {
 		String[] tab = new String[0];
-		if (prop == null) {
-			synchronized(flagsynchrone__) {
-				prop = init();
-			}
-		}
-		
+
 		String valeurs = prop.getProperty("JOURS_FERMETURE_ETAT_" + Integer.toString(annee));
-		
+
 		if (valeurs != null && !valeurs.equals("")) {
 			tab = valeurs.split(";");
 		}
-		
+
 		return tab;
 	}
-	
+
 	private static Properties init() {
 		String base = System.getProperty("jonas.base");
 		File file = null;
 		Properties propT = new Properties();
-		
+
 		if (base==null || base.equals("")) {
 			base = System.getProperty("distribution.properties");
-			if (base!=null)
+			if (base!=null) {
 				file = new File(base);
-			else
+			}
+			else {
 				return propT;
+			}
 		}
-		else
+		else {
 			file = new File(base + "/Distribution.properties");
-			
+		}
 		
+		InputStream is = null;
 		try {
-			propT.load(new FileInputStream(file));
+			is = new FileInputStream(file);
+			propT.load(is);
 		}
 		catch (FileNotFoundException e) {
-			e.printStackTrace();
+			LOG.error("fichier Distribution.properties non trouvé", e);
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			LOG.error("erreur lecture fichier Distribution.properties", e);
 		}
+		finally {
+			try {
+				is.close();
+			}
+			catch (IOException e) {
+				LOG.error("erreur fermeture fichier Distribution.properties", e);
+			}
+		}
+
 		return propT;
 	}
 
