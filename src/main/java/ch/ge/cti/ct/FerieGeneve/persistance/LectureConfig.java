@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 public final class LectureConfig {
 	private static Properties prop;
-	private static Logger LOG = Logger.getLogger(LectureConfig.class);
+	private static final Logger LOG = Logger.getLogger(LectureConfig.class);
 
 	static {
 		prop = init();
@@ -24,7 +24,7 @@ public final class LectureConfig {
 	/* (non-Javadoc)
 	 * @see ch.ge.cti.ct.FerieGeneve.persistance.LecteurJourFerie#getFerie(int)
 	 */
-	public static final String[] getFerie(int annee) {
+	public static String[] getFerie(int annee) {
 		String[] tab = new String[0];
 
 		String valeurs = prop.getProperty("JOURS_FERMETURE_ETAT_" + Integer.toString(annee));

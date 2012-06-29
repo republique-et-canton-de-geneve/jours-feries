@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import ch.ge.cti.ct.FerieGeneve.persistance.LectureConfig;
 
 
@@ -86,18 +88,33 @@ public class Ferie {
 	 */
 	public static final int RESTAURATION_REPUBLIQUE = 8;
 	
-   private static int ECART_VENDREDI_SAINT_PAQUES  = -2;
-   private static int ECART_LUNDI_PAQUES           = 1;
-   private static int ECART_ASCENSION_PAQUES       = 39;
-   private static int ECART_LUNDI_PENTECOTE_PAQUES = 50;
+   private static final int ECART_VENDREDI_SAINT_PAQUES  = -2;
+   private static final int ECART_LUNDI_PAQUES           = 1;
+   private static final int ECART_ASCENSION_PAQUES       = 39;
+   private static final int ECART_LUNDI_PENTECOTE_PAQUES = 50;
 
+   // tout cela pour être conforme sonar...
+   private static final int NOEL_JOUR = 25;
+   private static final int ANNEE_MAX = 10001;
+   private static final int RESTAURATION_JOUR = 31;
+   private static final int CONV_ANNEE_DTD = 10000;
+   private static final int CONV_MOIS_DTD = 100;
+   private static final int CONV_SIECLE = 100;
+   private static final int MOD_PAQUE = 19;
+   private static final int ANNEE_PARAM = 2011;
+   private static final int NBR_MOIS = 12;
+   private static final int HEURE_DEFAUT = 12;
+   private static final int MAX_JOUR_PAQUE = 31;
+   
+   
+  private static final Logger LOG = Logger.getLogger(Ferie.class);
+	
    private static Map<Integer, String[]> joursFermetureEtat = new HashMap<Integer, String[]>();
    /**
     * On n'instancie pas cette classe.
     */
    private Ferie()
    {
-      super();
    }
 
    /**
@@ -303,7 +320,7 @@ public class Ferie {
       setDefaultTime(cal);
       cal.set(Calendar.YEAR,pAnnee);
 
-      if (pAnnee>-1 && pAnnee<10001)
+      if (pAnnee>-1 && pAnnee<ANNEE_MAX)
       {
          switch (pJourFerie)
          {
@@ -348,13 +365,13 @@ public class Ferie {
                break;
 
             case NOEL:
-               cal.set(Calendar.DATE,25);
+               cal.set(Calendar.DATE,NOEL_JOUR);
                cal.set(Calendar.MONTH,Calendar.DECEMBER);
                date = cal.getTime();
                break;
 
             case RESTAURATION_REPUBLIQUE:
-               cal.set(Calendar.DATE,31);
+               cal.set(Calendar.DATE,RESTAURATION_JOUR);
                cal.set(Calendar.MONTH,Calendar.DECEMBER);
                date = cal.getTime();
                break;
@@ -379,7 +396,7 @@ public class Ferie {
    {
       Calendar cal = Calendar.getInstance();
       cal.setTime(getJourFerie(pJourFerie,pAnnee));
-      return cal.get(Calendar.YEAR)*10000 + (cal.get(Calendar.MONTH)+1)*100 + cal.get(Calendar.DATE);
+      return cal.get(Calendar.YEAR)*CONV_ANNEE_DTD + (cal.get(Calendar.MONTH)+1)*CONV_MOIS_DTD + cal.get(Calendar.DATE);
    }
 
 
@@ -392,7 +409,7 @@ public class Ferie {
    private static Date getDatePaques(int pAnnee)
    {
       Calendar cal = Calendar.getInstance();
-      int nombreOr = pAnnee % 19 + 1;
+      int nombreOr = pAnnee % MOD_PAQUE + 1;
       int siecle = pAnnee/100 + 1;
 
       // Nombre d'annï¿½e divisible par 4 qui ne sont pas bisextile. Comprend le dï¿½calage
@@ -421,9 +438,9 @@ public class Ferie {
       paque = paque + 7 - (dimanche + paque) % 7;
 
       // si le nombre paques est > 31, on est au mois d'avril
-      if (paque > 31)
+      if (paque > MAX_JOUR_PAQUE)
       {
-         paque -= 31;
+         paque -= MAX_JOUR_PAQUE;
          cal.set(Calendar.MONTH,Calendar.APRIL);
       }
       else
@@ -487,12 +504,12 @@ public class Ferie {
       dates[FETE_NATIONALE] = cal.getTime();
 
       // Noï¿½l
-      cal.set(Calendar.DATE,25);
+      cal.set(Calendar.DATE,NOEL_JOUR);
       cal.set(Calendar.MONTH,Calendar.DECEMBER);
       dates[NOEL] = cal.getTime();
 
       // Restauration de la Rï¿½publique
-      cal.set(Calendar.DATE,31);
+      cal.set(Calendar.DATE,RESTAURATION_JOUR);
       dates[RESTAURATION_REPUBLIQUE] = cal.getTime();
 
       // On continue avec les dates qui dï¿½pendent de la date de Pï¿½ques
@@ -550,7 +567,7 @@ public class Ferie {
    {
       Date[] dates = null;
       // Teste si les paramï¿½tres sont bien entre les bornes voulues
-      if (pAnnee>-1 && pAnnee<10001 && pMois > -1 && pMois < 12)
+      if (pAnnee>-1 && pAnnee<ANNEE_MAX && pMois > -1 && pMois < NBR_MOIS)
       {
          Calendar cal;
          
@@ -562,12 +579,15 @@ public class Ferie {
                setDefaultTime(cal);
                cal.set(pAnnee,Calendar.JANUARY,1);
                Date premierJanvier = cal.getTime();
+               dates = new Date[1];
+               // ici avant un bug car le premier janvier n'était pas ajouté si ce n'était pas un dimanche
+               // ancien code dans le if : dates = new Date[1]; cal.add...; dates[0] = ....
                if (isDimanche(premierJanvier))
                {
-                  dates = new Date[1];
                   cal.add(Calendar.DATE,1);
-                  dates[0] = cal.getTime();
                }
+               dates[0] = cal.getTime();
+              
                break;
 
             case Calendar.MAY:
@@ -585,21 +605,23 @@ public class Ferie {
                setDefaultTime(cal);
                cal.set(pAnnee,Calendar.AUGUST,1);
                Date premierAout = cal.getTime();
+               // ici avant un bug la date n'était pas ajouté si ce n'était pas un dimanche
+               // ancien code dans le if : dates = new Date[1]; cal.add...; dates[0] = ....
+               dates = new Date[1];
                if (isDimanche(premierAout))
                {
-                  dates = new Date[1];
                   cal.add(Calendar.DATE,1);
-                  dates[0] = cal.getTime();
                }
+               dates[0] = cal.getTime();
                break;
 
             case Calendar.DECEMBER:
                  // Au mois de dï¿½cembre, les 24, 26, 27, 28, 29 et 30 dï¿½cembre ï¿½taient fermï¿½s avant 2011
-            	if (pAnnee < 2011) {
+            	if (pAnnee < ANNEE_PARAM) {
                    cal = Calendar.getInstance();
                    setDefaultTime(cal);
                    dates = new Date[6];
-                   cal.set(pAnnee,Calendar.DECEMBER,24);
+                   cal.set(pAnnee,Calendar.DECEMBER,NOEL_JOUR-1);
                    dates[0] = cal.getTime();
                    cal.add(Calendar.DATE,2);
                    dates[1] = cal.getTime();
@@ -619,7 +641,7 @@ public class Ferie {
          }
          
          // aprés 2011 les dates de fermetures sont paramï¿½trï¿½es
-         if (pAnnee >= 2011) {
+         if (pAnnee >= ANNEE_PARAM) {
         	 List<Date> joursFermes = getJoursFermesParConseilEtat(pAnnee, pMois);
         	 if (dates != null) { 
         		 joursFermes.addAll( Arrays.asList(dates) );
@@ -657,7 +679,7 @@ public class Ferie {
     			}
     		}
     		catch (ParseException ex) {
-    			// TODO : logger ici :D
+    			LOG.error("erreur au niveau du formatage de la date reÃ§ue : " + tabJoursFermes[i] + " attendue : dd/MM/yyyy", ex);
     			// sysout( "erreur au niveau du formatage de la date reÃ§ue : " + tabJoursFermes[i] + " attendue : dd/MM/yyyy")
     		}
 		}
@@ -715,7 +737,7 @@ public class Ferie {
    {
       Date[] dates = null;
       // Teste si les paramï¿½tres sont bien entre les bornes voulues
-      if (pAnnee>-1 && pAnnee<10001 && pMois > -1 && pMois < 12)
+      if (pAnnee>-1 && pAnnee<ANNEE_MAX && pMois > -1 && pMois < NBR_MOIS)
       {
          Calendar cal;
          int index;
@@ -1212,7 +1234,7 @@ public class Ferie {
     */
    private static void setDefaultTime(Calendar pCal)
    {
-      pCal.set(Calendar.HOUR_OF_DAY,12);
+      pCal.set(Calendar.HOUR_OF_DAY, HEURE_DEFAUT);
       pCal.set(Calendar.MINUTE,0);
       pCal.set(Calendar.SECOND,0);
       pCal.set(Calendar.MILLISECOND,0);
@@ -1227,7 +1249,7 @@ public class Ferie {
    private static int convert(Calendar pCal, Date pDate)
    {
       pCal.setTime(pDate);
-      return pCal.get(Calendar.YEAR)*10000 + (pCal.get(Calendar.MONTH)+1)*100 + pCal.get(Calendar.DATE);
+      return pCal.get(Calendar.YEAR)*CONV_ANNEE_DTD + (pCal.get(Calendar.MONTH)+1)*CONV_MOIS_DTD + pCal.get(Calendar.DATE);
 
    }
 
@@ -1240,11 +1262,11 @@ public class Ferie {
    private static Date convert(Calendar pCal, int pDTDDate)
    {
       int jour, mois, annee;
-      jour = pDTDDate % 100;
-      int pDTDDateT = pDTDDate/100;
-      mois = pDTDDateT % 100;
-      annee =  pDTDDateT / 100;
-      pCal.set(annee,mois-1,jour,12,0,0);
+      jour = pDTDDate % CONV_MOIS_DTD;
+      int pDTDDateT = pDTDDate/CONV_MOIS_DTD;
+      mois = pDTDDateT % CONV_MOIS_DTD;
+      annee =  pDTDDateT / CONV_SIECLE;
+      pCal.set(annee,mois-1,jour,NBR_MOIS,0,0);
       return pCal.getTime();
 
    }
