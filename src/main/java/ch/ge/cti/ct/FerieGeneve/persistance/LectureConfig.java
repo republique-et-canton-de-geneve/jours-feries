@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
  */
 public final class LectureConfig implements ParamFermesAble {
 	private Properties prop;
-	private Logger LOG = Logger.getLogger(LectureConfig.class);
+	private static final Logger LOG = Logger.getLogger(LectureConfig.class);
 
 	public LectureConfig() {
 		String base = System.getProperty("jonas.base");
