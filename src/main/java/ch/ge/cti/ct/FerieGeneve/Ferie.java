@@ -17,6 +17,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import ch.ge.cti.ct.FerieGeneve.persistance.LectureConfig;
+import ch.ge.cti.ct.FerieGeneve.persistance.ParamFermesAble;
 
 
 /**
@@ -47,7 +48,7 @@ import ch.ge.cti.ct.FerieGeneve.persistance.LectureConfig;
  * @author <a href="mailto:patrick.giroud@etat.ge.ch">Patrick Giroud</a>
  * @version $Revision: 1.11 $
  */
-public class Ferie {
+public final class Ferie {
 	/**
 	 * Le premier jour de l'annï¿½e : 1<sup>er</sup> janvier.
 	 */
@@ -108,12 +109,23 @@ public class Ferie {
    
    
   private static final Logger LOG = Logger.getLogger(Ferie.class);
+  
+  // permet de lire les données concernant le paramètrage des jours fermés
+  private static ParamFermesAble lecteurParam;
 	
-   private static Map<Integer, String[]> joursFermetureEtat = new HashMap<Integer, String[]>();
+  private static Map<Integer, String[]> joursFermetureEtat = new HashMap<Integer, String[]>();
+   
+   /**
+    * lecteur de paramêtre par défaut
+    */
+   static {
+	   lecteurParam = new LectureConfig();
+   }
+   
    /**
     * On n'instancie pas cette classe.
     */
-   private Ferie()
+   protected Ferie()
    {
    }
 
@@ -122,7 +134,7 @@ public class Ferie {
     * @param pDate La date ï¿½ tester
     * @return true si la date est un samedi
     */
-   public static final boolean isSamedi(Date pDate)
+   public static boolean isSamedi(Date pDate)
    {
      Calendar cal = Calendar.getInstance();
      cal.setTime(pDate);
@@ -134,7 +146,7 @@ public class Ferie {
     * @param pDTDDate Un entier : la date ï¿½ tester au format DTD (yyyyMMdd)
     * @return true si la date est un samedi
     */
-   public static final boolean isSamedi(int pDTDDate)
+   public static boolean isSamedi(int pDTDDate)
    {
       Calendar cal = Calendar.getInstance();
       return isSamedi(convert(cal,pDTDDate));
@@ -145,7 +157,7 @@ public class Ferie {
     * @param pDate La date ï¿½ tester
     * @return true si la date est un dimanche
     */
-   public static final boolean isDimanche(Date pDate)
+   public static boolean isDimanche(Date pDate)
    {
       Calendar cal = Calendar.getInstance();
       cal.setTime(pDate);
@@ -157,7 +169,7 @@ public class Ferie {
     * @param pDTDDate Un entier : la date ï¿½ tester au format DTD (yyyyMMdd)
     * @return true si la date est un dimanche
     */
-   public static final boolean isDimanche(int pDTDDate)
+   public static boolean isDimanche(int pDTDDate)
    {
       Calendar cal = Calendar.getInstance();
       return isDimanche(convert(cal,pDTDDate));
@@ -169,7 +181,7 @@ public class Ferie {
     * @param pDate
     * @return <code>true</code> si le date est un jour fï¿½riï¿½ officiel.
     */
-   public static final boolean isJourFerie(Date pDate)
+   public static boolean isJourFerie(Date pDate)
    {
       boolean result = false;
       Calendar cal = Calendar.getInstance();
@@ -196,7 +208,7 @@ public class Ferie {
    * @param pDTDDate Un entier correspondant ï¿½ la date au format DTD (yyyyMMdd)
    * @return <code>true</code> si le date est un jour fï¿½riï¿½ officiel.
    */
-   public static final boolean isJourFerie(int pDTDDate)
+   public static boolean isJourFerie(int pDTDDate)
    {
       Calendar cal = Calendar.getInstance();
       return isJourFerie(convert(cal,pDTDDate));
@@ -209,7 +221,7 @@ public class Ferie {
     * @param pDate
     * @return <code>true</code> si le date est un jour fï¿½riï¿½ officiel.
     */
-   public static final boolean isJourEtatFerie(Date pDate)
+   public static boolean isJourEtatFerie(Date pDate)
    {
       boolean result = false;
       Calendar cal = Calendar.getInstance();
@@ -253,7 +265,7 @@ public class Ferie {
    * @param pDTDDate Un entier correspondant ï¿½ la date au format DTD (yyyyMMdd)
    * @return <code>true</code> si le date est un jour fï¿½riï¿½ officiel.
    */
-   public static final boolean isJourEtatFerie(int pDTDDate) 
+   public static boolean isJourEtatFerie(int pDTDDate) 
    {
       Calendar cal = Calendar.getInstance();
       return isJourEtatFerie(convert(cal,pDTDDate));
@@ -265,7 +277,7 @@ public class Ferie {
     * @param pDate La date
     * @return <code>true</code> si la date passï¿½e en paramï¿½tre est un jour ouvrable.
     */
-   public static final boolean isJourOuvrable(Date pDate)
+   public static boolean isJourOuvrable(Date pDate)
    {
       return !(isSamedi(pDate) || isDimanche(pDate) || isJourFerie(pDate));
    }
@@ -276,7 +288,7 @@ public class Ferie {
     * @param pDtdDate Un entier correspondant ï¿½ la date au format DTD (yyyyMMdd)
     * @return <code>true</code> si la date passï¿½e en paramï¿½tre est un jour ouvrable.
     */
-   public static final boolean isJourOuvrable(int pDtdDate)
+   public static boolean isJourOuvrable(int pDtdDate)
    {
       return !(isSamedi(pDtdDate) || isDimanche(pDtdDate) || isJourFerie(pDtdDate));
    }
@@ -287,7 +299,7 @@ public class Ferie {
     * @param pDate La date
     * @return <code>true</code> si la date passï¿½e en paramï¿½tre est un jour ouvrable au sens de l'ï¿½tat..
     */
-   public static final boolean isJourEtatOuvrable(Date pDate)
+   public static boolean isJourEtatOuvrable(Date pDate)
    {
       return !(isSamedi(pDate) || isDimanche(pDate) || isJourEtatFerie(pDate));
    }
@@ -298,7 +310,7 @@ public class Ferie {
     * @param pDtdDate Un entier correspondant ï¿½ la date au format DTD (yyyyMMdd)
     * @return <code>true</code> si la date passï¿½e en paramï¿½tre est un jour ouvrable au sens de l'ï¿½tat..
     */
-   public static final boolean isJourEtatOuvrable(int pDtdDate)
+   public static boolean isJourEtatOuvrable(int pDtdDate)
    {
       return !(isSamedi(pDtdDate) || isDimanche(pDtdDate) || isJourEtatFerie(pDtdDate));
    }
@@ -313,7 +325,7 @@ public class Ferie {
     * @param pAnnee Une annï¿½e comprise entre 0 et 10000.
     * @return La date du jour fï¿½riï¿½
     */
-   public static final Date getJourFerie(int pJourFerie, int pAnnee)
+   public static Date getJourFerie(int pJourFerie, int pAnnee)
    {
       Date date = null;
       Calendar cal = Calendar.getInstance();
@@ -392,7 +404,7 @@ public class Ferie {
     * @param pAnnee Une annï¿½e comprise entre 0 et 10000.
     * @return Un entier : la date du jour fï¿½riï¿½ au format DTD (yyyyMMdd)
     */
-   public static final int getJourDTDFerie(int pJourFerie, int pAnnee)
+   public static int getJourDTDFerie(int pJourFerie, int pAnnee)
    {
       Calendar cal = Calendar.getInstance();
       cal.setTime(getJourFerie(pJourFerie,pAnnee));
@@ -487,7 +499,7 @@ public class Ferie {
     * @param pAnnee
     * @return le tableau des jours fï¿½riï¿½s
     */
-   public static final Date[] getJoursFeries(int pAnnee)
+   public static Date[] getJoursFeries(int pAnnee)
    {
       Date[] dates = new Date[9];
       Calendar cal = Calendar.getInstance();
@@ -540,7 +552,7 @@ public class Ferie {
     * @param pAnnee
     * @return le tableau des jours fï¿½riï¿½s au format DTD (yyyyMMdd)
     */
-   public static final int[] getJoursDTDFeries(int pAnnee)
+   public static int[] getJoursDTDFeries(int pAnnee)
    {
       Calendar cal = Calendar.getInstance();
       Date[] dates = getJoursFeries(pAnnee);
@@ -563,7 +575,7 @@ public class Ferie {
     * @param pMois Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
     * @return Un tableau (qui peut ï¿½tre vide) contenant les jours fermï¿½s du mois.
     */
-   public static final Date[] getJoursEtatFermesDuMois(int pAnnee, int pMois)
+   public static Date[] getJoursEtatFermesDuMois(int pAnnee, int pMois)
    {
       Date[] dates = new Date[0];
       // Teste si les paramï¿½tres sont bien entre les bornes voulues
@@ -659,7 +671,7 @@ public class Ferie {
 		String[] tabJoursFermes = (String[]) joursFermetureEtat.get(Integer.valueOf(pAnnee));
 		if (tabJoursFermes == null) {
 			//LECTURE des joursFermes format dd/MM/yyyy
-			tabJoursFermes = getFermetureParametre(pAnnee);
+			tabJoursFermes = lecteurParam.getJoursFermes(pAnnee);
 			joursFermetureEtat.put(Integer.valueOf(pAnnee), tabJoursFermes);
 		}
 
@@ -683,15 +695,6 @@ public class Ferie {
 		return listeJoursFermes;
 	}
 
-	/**
-	 * Permet de lire les paramètres concernant les jours de fermeture de l'état
-	 * @param pAnnee
-	 * @return
-	 */
-	protected static String[] getFermetureParametre(int pAnnee) {
-		return LectureConfig.getFerie(pAnnee);
-	}
-
    /**
     * Cette mï¿½thode retourne les jours fermï¿½s d'un mois donnï¿½ et d'une annï¿½e donnï¿½e.
     * Les jours fermï¿½s ne sont pas des jours fï¿½riï¿½s officiels.
@@ -703,7 +706,7 @@ public class Ferie {
     * @param pMois Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
     * @return Un tableau (qui peut ï¿½tre vide) contenant les jours fï¿½riï¿½s du mois au format DTD (yyyyMMdd).
     */
-   public static final int[] getJoursDTDEtatFermesDuMois(int pAnnee, int pMois)
+   public static int[] getJoursDTDEtatFermesDuMois(int pAnnee, int pMois)
    {
       Calendar cal = Calendar.getInstance();
       // On cherche les dates au format jav du mois pMois
@@ -729,7 +732,7 @@ public class Ferie {
     * @param pMois Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
     * @return Un tableau (qui peut ï¿½tre vide) contenant les jours fï¿½riï¿½s du mois.
     */
-   public static final Date[] getJoursFeriesDuMois(int pAnnee, int pMois)
+   public static Date[] getJoursFeriesDuMois(int pAnnee, int pMois)
    {
       Date[] dates = null;
       // Teste si les paramï¿½tres sont bien entre les bornes voulues
@@ -1009,7 +1012,7 @@ public class Ferie {
     * @param pMois Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
     * @return Un tableau (qui peut ï¿½tre vide) contenant les jours fï¿½riï¿½s du mois au format DTD (yyyyMMdd).
     */
-   public static final int[] getJoursDTDFeriesDuMois(int pAnnee, int pMois)
+   public static int[] getJoursDTDFeriesDuMois(int pAnnee, int pMois)
    {
       Calendar cal = Calendar.getInstance();
       // On cherche les dates au format jav du mois pMois
@@ -1033,7 +1036,7 @@ public class Ferie {
     * @param pNbreJoursOuvrables Le nombre de jours ouvrables ï¿½ ajouter ou soustraire.
     * @return pDate augmentï¿½e de pNbreJoursOuvrables
     */
-   public static final Date addJoursEtatOuvrables(final Date pDate, final int pNbreJoursOuvrables)
+   public static Date addJoursEtatOuvrables(final Date pDate, final int pNbreJoursOuvrables)
    {
    	Calendar cal = Calendar.getInstance();
       cal.setTime(pDate);
@@ -1084,7 +1087,7 @@ public class Ferie {
     * @param pNbreJoursOuvrables Le nombre de jours ouvrables ï¿½ ajouter. Ce nombre doit ï¿½tre &gt;=0.
     * @return Un entier : pDate augmentï¿½e de pNbreJoursOuvrables au format DTD (yyyyMMdd)
     */
-   public static final int addJoursEtatOuvrables(final int pDTDDate, final int pNbreJoursOuvrables)
+   public static int addJoursEtatOuvrables(final int pDTDDate, final int pNbreJoursOuvrables)
    {
       Calendar cal = Calendar.getInstance();
       return convert(cal,addJoursEtatOuvrables(convert(cal,pDTDDate),pNbreJoursOuvrables));
@@ -1101,7 +1104,7 @@ public class Ferie {
     * @param pNbreJoursOuvrables Le nombre de jours ouvrables ï¿½ ajouter ou soustraire..
     * @return pDate augmentï¿½e de pNbreJoursOuvrables
     */
-   public static final Date addJoursOuvrables(final Date pDate, final int pNbreJoursOuvrables)
+   public static Date addJoursOuvrables(final Date pDate, final int pNbreJoursOuvrables)
    {
       Calendar cal = Calendar.getInstance();
       cal.setTime(pDate);
@@ -1152,7 +1155,7 @@ public class Ferie {
     * @param pNbreJoursOuvrables Le nombre de jours ouvrables ï¿½ ajouter. Ce nombre doit ï¿½tre &gt;=0.
     * @return Un entier : pDate augmentï¿½e de pNbreJoursOuvrables au format DTD (yyyyMMdd)
     */
-   public static final int addJoursOuvrables(final int pDTDDate, final int pNbreJoursOuvrables)
+   public static int addJoursOuvrables(final int pDTDDate, final int pNbreJoursOuvrables)
    {
       Calendar cal = Calendar.getInstance();
       return convert(cal,addJoursOuvrables(convert(cal,pDTDDate),pNbreJoursOuvrables));
@@ -1166,7 +1169,7 @@ public class Ferie {
     * @param pDate La date ï¿½ partir de laquelle on veut le prochain jour ouvrable
     * @return La date suivant la date donnï¿½e en paramï¿½tre qui est ouvrable.
     */
-   public static final Date getProchainJourOuvrable(final Date pDate)
+   public static Date getProchainJourOuvrable(final Date pDate)
    {
       Calendar cal = Calendar.getInstance();
       cal.setTime(pDate);
@@ -1185,7 +1188,7 @@ public class Ferie {
     * @param pDTDDate Un entier : la date au format DTD (yyyyMMdd) ï¿½ partir de laquelle on veut le prochain jour ouvrable
     * @return La date au format DTD (yyyyMMdd) suivant la date donnï¿½e en paramï¿½tre qui est ouvrable.
     */
-   public static final int getProchainJourOuvrable(final int pDTDDate)
+   public static int getProchainJourOuvrable(final int pDTDDate)
    {
       Calendar cal = Calendar.getInstance();
       return convert(cal,getProchainJourOuvrable(convert(cal,pDTDDate)));
@@ -1197,7 +1200,7 @@ public class Ferie {
     * @param pDate La date ï¿½ partir de laquelle on veut le prochain jour ouvrable (pour l'ï¿½tat)
     * @return La date suivant la date donnï¿½e en paramï¿½tre qui est ouvrable.
     */
-   public static final Date getProchainJourEtatOuvrable(final Date pDate)
+   public static Date getProchainJourEtatOuvrable(final Date pDate)
    {
       Calendar cal = Calendar.getInstance();
       cal.setTime(pDate);
@@ -1216,7 +1219,7 @@ public class Ferie {
     * @param pDTDDate Un entier : la date au format DTD (yyyyMMdd) ï¿½ partir de laquelle on veut le prochain jour ouvrable (pour l'ï¿½tat)
     * @return La date au format DTD (yyyyMMdd) suivant la date donnï¿½e en paramï¿½tre qui est ouvrable.
     */
-   public static final int getProchainJourEtatOuvrable(final int pDTDDate)
+   public static int getProchainJourEtatOuvrable(final int pDTDDate)
    {
       Calendar cal = Calendar.getInstance();
       return convert(cal,getProchainJourEtatOuvrable(convert(cal,pDTDDate)));
@@ -1246,7 +1249,6 @@ public class Ferie {
    {
       pCal.setTime(pDate);
       return pCal.get(Calendar.YEAR)*CONV_ANNEE_DTD + (pCal.get(Calendar.MONTH)+1)*CONV_MOIS_DTD + pCal.get(Calendar.DATE);
-
    }
 
    /**
@@ -1267,4 +1269,7 @@ public class Ferie {
 
    }
   
+   public static void init(ParamFermesAble lecteur) {
+	   lecteurParam = lecteur;
+   }
 }

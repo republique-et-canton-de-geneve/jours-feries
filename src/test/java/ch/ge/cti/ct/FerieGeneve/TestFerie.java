@@ -14,7 +14,7 @@ public class TestFerie extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		System.setProperty("distribution.properties", this.getClass().getResource("/Distribution.properties").getFile());
-		super.setUp();
+		super.setUp(); 
 	}
 	
 	public void testJourEtat() { 
@@ -401,5 +401,4 @@ public class TestFerie extends TestCase {
 		jourOuvrable = Ferie.getProchainJourEtatOuvrable(20091224);
 		assertEquals(20100104, jourOuvrable);
 	}
-	
 }

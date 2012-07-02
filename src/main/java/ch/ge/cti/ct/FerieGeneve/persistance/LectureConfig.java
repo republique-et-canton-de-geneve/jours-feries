@@ -14,49 +14,14 @@ import org.apache.log4j.Logger;
  * Cette classe permet la lecture du Distribution.properties afin d'y trouver les dâtes des jours états fermés
  * @author pinaudj
  */
-public final class LectureConfig {
-	private static Properties prop;
-	private static final Logger LOG = Logger.getLogger(LectureConfig.class);
+public final class LectureConfig implements ParamFermesAble {
+	private Properties prop;
+	private Logger LOG = Logger.getLogger(LectureConfig.class);
 
-	static {
-		prop = init();
-	}
-
-	/**
-	 * constructeur caché
-	 */
-	private LectureConfig() {
-
-	}
-
-	/**
-	 * Retourne la liste des jours états fermés pour une année données
-	 * @param annee
-	 * @return
-	 */
-	public static String[] getFerie(int annee) {
-		String[] tab = new String[0];
-
-		// obtention des valeurs pour l'année donnée
-		String valeurs = prop.getProperty("JOURS_FERMETURE_ETAT_" + Integer.toString(annee));
-
-		//parsing
-		if (valeurs != null && !valeurs.equals("")) {
-			tab = valeurs.split(";");
-		}
-
-		return tab;
-	}
-
-	/**
-	 * Initialise les properties
-	 * (lecture de Distribution.properties)
-	 * @return
-	 */
-	private static Properties init() {
+	public LectureConfig() {
 		String base = System.getProperty("jonas.base");
 		File file = null;
-		Properties propT = new Properties();
+		prop = new Properties();
 
 		// si pas de jonas.base dans les propriétés système on cherche distribution.properties
 		if (base==null || base.equals("")) {
@@ -65,7 +30,7 @@ public final class LectureConfig {
 				file = new File(base);
 			}
 			else {
-				return propT;
+				return;
 			}
 		}
 		// sinon on charge le fichier
@@ -77,7 +42,7 @@ public final class LectureConfig {
 		InputStream is = null;
 		try {
 			is = new FileInputStream(file);
-			propT.load(is);
+			prop.load(is);
 		}
 		catch (FileNotFoundException e) {
 			LOG.error("fichier Distribution.properties non trouvé", e);
@@ -93,8 +58,24 @@ public final class LectureConfig {
 				LOG.error("erreur fermeture fichier Distribution.properties", e);
 			}
 		}
-
-		return propT;
 	}
 
+	/**
+	 * Retourne la liste des jours états fermés pour une année données
+	 * @param annee
+	 * @return
+	 */
+	public String[] getJoursFermes(int annee) {
+		String[] tab = new String[0];
+
+		// obtention des valeurs pour l'année donnée
+		String valeurs = prop.getProperty("JOURS_FERMETURE_ETAT_" + Integer.toString(annee));
+
+		//parsing
+		if (valeurs != null && !valeurs.equals("")) {
+			tab = valeurs.split(";");
+		}
+
+		return tab;
+	}
 }

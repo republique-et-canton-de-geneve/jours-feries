@@ -58,7 +58,7 @@
 
 	<ciManagement>
 		<system>hudson</system>
-		<url>http://ic.etat-ge.ch:20200/hudson/job/ct.jourferie</url>
+		<url>http://ic.etat-ge.ch:20200/hudson/job/ct-jourferie</url>
 		<notifiers>
 			<notifier>
 				<type />
