@@ -84,7 +84,7 @@ public class TestFerie extends TestCase {
 		assertEquals(20120102, jourFerme[0]);
 		
 		jourFerme = Ferie.getJoursDTDEtatFermesDuMois(2008, Calendar.AUGUST);
-		assertEquals(20080801, jourFerme[0]);
+		assertEquals(0, jourFerme.length);
 		
 
 		

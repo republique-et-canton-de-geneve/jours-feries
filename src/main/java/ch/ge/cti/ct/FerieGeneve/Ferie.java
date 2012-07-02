@@ -565,7 +565,7 @@ public class Ferie {
     */
    public static final Date[] getJoursEtatFermesDuMois(int pAnnee, int pMois)
    {
-      Date[] dates = null;
+      Date[] dates = new Date[0];
       // Teste si les paramï¿½tres sont bien entre les bornes voulues
       if (pAnnee>-1 && pAnnee<ANNEE_MAX && pMois > -1 && pMois < NBR_MOIS)
       {
@@ -579,14 +579,13 @@ public class Ferie {
                setDefaultTime(cal);
                cal.set(pAnnee,Calendar.JANUARY,1);
                Date premierJanvier = cal.getTime();
-               dates = new Date[1];
-               // ici avant un bug car le premier janvier n'était pas ajouté si ce n'était pas un dimanche
-               // ancien code dans le if : dates = new Date[1]; cal.add...; dates[0] = ....
                if (isDimanche(premierJanvier))
                {
+            	  dates = new Date[1];
                   cal.add(Calendar.DATE,1);
+                  dates[0] = cal.getTime();
                }
-               dates[0] = cal.getTime();
+
               
                break;
 
@@ -605,14 +604,13 @@ public class Ferie {
                setDefaultTime(cal);
                cal.set(pAnnee,Calendar.AUGUST,1);
                Date premierAout = cal.getTime();
-               // ici avant un bug la date n'était pas ajouté si ce n'était pas un dimanche
-               // ancien code dans le if : dates = new Date[1]; cal.add...; dates[0] = ....
-               dates = new Date[1];
+              
                if (isDimanche(premierAout))
                {
+            	  dates = new Date[1];
                   cal.add(Calendar.DATE,1);
+                  dates[0] = cal.getTime();
                }
-               dates[0] = cal.getTime();
                break;
 
             case Calendar.DECEMBER:
@@ -662,7 +660,6 @@ public class Ferie {
 		if (tabJoursFermes == null) {
 			//LECTURE des joursFermes format dd/MM/yyyy
 			tabJoursFermes = getFermetureParametre(pAnnee);
-		
 			joursFermetureEtat.put(Integer.valueOf(pAnnee), tabJoursFermes);
 		}
 
