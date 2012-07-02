@@ -1269,6 +1269,10 @@ public final class Ferie {
 
    }
   
+   /**
+    * Permet de définir le lecteur des paramètres
+    * @param lecteur
+    */
    public static void init(ParamFermesAble lecteur) {
 	   lecteurParam = lecteur;
    }

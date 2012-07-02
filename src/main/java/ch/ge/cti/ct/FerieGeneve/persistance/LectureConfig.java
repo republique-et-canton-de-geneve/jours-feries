@@ -18,6 +18,10 @@ public final class LectureConfig implements ParamFermesAble {
 	private Properties prop;
 	private static final Logger LOG = Logger.getLogger(LectureConfig.class);
 
+	/**
+	 * Constructeur par défaut
+	 * Trouve et lit le Distribution.properties
+	 */
 	public LectureConfig() {
 		String base = System.getProperty("jonas.base");
 		File file = null;
