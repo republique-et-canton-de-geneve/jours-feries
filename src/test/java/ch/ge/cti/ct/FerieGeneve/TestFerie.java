@@ -348,6 +348,113 @@ public class TestFerie extends TestCase {
 		assertEquals(20121231, datesDTD[8]);
 	}
 	
+	public void testGetJourFerie2014() {
+		Date d = null;
+		Calendar cal = new GregorianCalendar();
+		Calendar cal2 = new GregorianCalendar();
+		
+		try { d = df.parse("17/05/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(Ferie.getJourFerie(Ferie.ASCENSION, 2012));
+		assertEquals("ascension 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals("ascension 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		assertEquals("ascension 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+		
+		
+		try { d = df.parse("9/04/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(Ferie.getJourFerie(Ferie.LUNDI_PAQUES, 2012));
+		assertEquals("paques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals("paques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		assertEquals("paques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+		
+		try { d = df.parse("06/09/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, 2012));
+		assertEquals("paques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals("paques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		assertEquals("paques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+		
+		assertEquals("ascension 2012", 20120517, Ferie.getJourDTDFerie(Ferie.ASCENSION, 2012));
+		
+		assertNull(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, -1));
+		assertNull(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, 99999));
+		
+		
+		try { 
+			Ferie.getJourFerie(99,2012);
+			fail("exception non levée");
+		}
+		catch (Exception e) {}
+		
+		
+		Date[] dates = Ferie.getJoursFeries(2012);
+		try { d = df.parse("01/01/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[0]);
+		assertEquals("1er 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals("1er 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		try { d = df.parse("06/04/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[1]);
+		assertEquals(cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals(cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		try { d = df.parse("09/04/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[2]);
+		assertEquals(cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals(cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		try { d = df.parse("17/05/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[3]);
+		assertEquals(cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals(cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		try { d = df.parse("28/05/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[4]);
+		assertEquals(cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals(cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		try { d = df.parse("01/08/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[5]);
+		assertEquals(cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals(cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		try { d = df.parse("06/09/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[6]);
+		assertEquals(cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals(cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		try { d = df.parse("25/12/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[7]);
+		assertEquals(cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals(cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		try { d = df.parse("31/12/2012"); } catch (Exception e) {fail("erreur parsing...");}
+		cal.setTime(d);
+		cal2.setTime(dates[8]);
+		assertEquals(cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+		assertEquals(cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+		
+		int[] datesDTD = Ferie.getJoursDTDFeries(2014);
+		assertEquals(20140101, datesDTD[0]);
+		assertEquals(20140418, datesDTD[1]);
+		assertEquals(20140421, datesDTD[2]);
+		assertEquals(20140529, datesDTD[3]);
+		assertEquals(20140609, datesDTD[4]);
+		assertEquals(20140801, datesDTD[5]);
+		assertEquals(20140911, datesDTD[6]);
+		assertEquals(20141225, datesDTD[7]);
+		assertEquals(20141231, datesDTD[8]);
+	}
+	
 	public void testAddJourouvrable() {
 		Calendar cal = new GregorianCalendar();
 		Calendar cal2 = new GregorianCalendar();
