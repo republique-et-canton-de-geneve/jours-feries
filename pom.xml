@@ -13,7 +13,7 @@
 
 	<groupId>ch.ge.cti.ct</groupId>
 	<artifactId>ct_jourferie_ge</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>CT - Jours Feries</name>
 	<packaging>jar</packaging>
 
@@ -44,14 +44,14 @@
 
 	<scm>
 		<connection>
-			scm:svn:http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/trunk
+			scm:svn:http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/tags/ct_jourferie_ge-1.0.2
 		</connection>
 
 		<developerConnection>
-			scm:svn:http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/trunk
+			scm:svn:http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/tags/ct_jourferie_ge-1.0.2
 		</developerConnection>
 
-		<url>http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/trunk</url>
+		<url>http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/tags/ct_jourferie_ge-1.0.2</url>
 	</scm>
 
 	<!-- Cette section sera utilisee ulterieurement avec l'integration continue -->
