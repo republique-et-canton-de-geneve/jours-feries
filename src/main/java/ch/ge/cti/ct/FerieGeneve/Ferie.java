@@ -509,15 +509,18 @@ public final class Ferie {
       // Jour de l'an
       cal.set(Calendar.DATE,1);
       cal.set(Calendar.MONTH,Calendar.JANUARY);
+      cal.set(Calendar.YEAR, pAnnee);
       dates[NOUVEL_AN] = cal.getTime();
 
       // F�te nationale
       cal.set(Calendar.MONTH,Calendar.AUGUST);
+      cal.set(Calendar.YEAR, pAnnee);
       dates[FETE_NATIONALE] = cal.getTime();
 
       // No�l
       cal.set(Calendar.DATE,NOEL_JOUR);
       cal.set(Calendar.MONTH,Calendar.DECEMBER);
+      cal.set(Calendar.YEAR, pAnnee);
       dates[NOEL] = cal.getTime();
 
       // Restauration de la R�publique
