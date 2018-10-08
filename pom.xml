@@ -43,15 +43,9 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>
-			scm:svn:http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/trunk
-		</connection>
-
-		<developerConnection>
-			scm:svn:http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/trunk
-		</developerConnection>
-
-		<url>http://scm.etat-ge.ch:21080/cti.composant/ct_jourferie_ge/trunk</url>
+		<connection>scm:git:https://***REMOVED***/Communs/jours-feries.git</connection>
+		<developerConnection>scm:git:https://***REMOVED***/Communs/jours-feries.git</developerConnection>
+		<url>https://***REMOVED***/Communs/jours-feries.git</url>
 	</scm>
 
 	<!-- Cette section sera utilisee ulterieurement avec l'integration continue -->
