@@ -55,6 +55,7 @@ public final class Ferie {
      * Le premier jour de l'ann�e : 1<sup>er</sup> janvier.
      */
     public static final int NOUVEL_AN = 0;
+    AAA
 
     /**
      * vendredi saint : 2 jours avant P�ques.

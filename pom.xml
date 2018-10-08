@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
-
-    <!-- CTI - Melusine 01/2008 -->
 
     <parent>
         <artifactId>pom_parent_projet</artifactId>
@@ -20,27 +17,14 @@
     <description>Application fournissant les jours feries a l'Etat de Geneve</description>
 
     <organization>
-        <name>CTI</name>
-        <url>http://intracti.etat-ge.ch/accueil/index.asp</url>
+        <name>DGSIN</name>
+        <url>http://www.ge.ch/dgsi</url>
     </organization>
 
     <issueManagement>
         <system>JIRA</system>
-        <url>
-            http://etatprd.etat-ge.ch:30402/ctidemande/browse/votre_identifiant_JIRA
-        </url>
+        <url>https://***REMOVED***</url>
     </issueManagement>
-
-    <url>
-        file://X:/commun/Melusine/projects_Website/UCTI/FerieGeneve/${version}/index.html
-    </url>
-
-    <distributionManagement>
-        <site>
-            <id>projects_Website</id>
-            <url>${siteRepository}/UCTI/FerieGeneve/${version}</url>
-        </site>
-    </distributionManagement>
 
     <scm>
         <connection>scm:git:https://***REMOVED***/Communs/jours-feries.git</connection>
@@ -49,11 +33,9 @@
         <url>https://***REMOVED***/Communs/jours-feries.git</url>
     </scm>
 
-    <!-- Cette section sera utilisee ulterieurement avec l'integration continue -->
-
     <ciManagement>
         <system>jenkins</system>
-        <url>http://ic.etat-ge.ch:20200/hudson/job/ct-jourferie</url>
+        <url>https://***REMOVED***/view/Composants métier communs/job/jours-feries</url>
         <notifiers>
             <notifier>
                 <type/>
@@ -66,20 +48,21 @@
             </notifier>
         </notifiers>
     </ciManagement>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
     <dependencies>
-        <!-- effacer cette dependance si vous n'utilisez pas junit. -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
