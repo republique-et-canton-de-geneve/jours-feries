@@ -1,18 +1,18 @@
 <document>
 
-  <properties>
-    <title>Lot BATCH généré par utilisation d'archétype"</title>
-    <author email="Christian-Luc.houze@etat.ge.ch">Christian-Luc Houzé</author>
-  </properties>
+    <properties>
+        <title>Lot BATCH généré par utilisation d'archétype"</title>
+        <author email="Christian-Luc.houze@etat.ge.ch">Christian-Luc Houzé</author>
+    </properties>
 
-  <body>
+    <body>
 
-    <release version="0.0.1" date="2007-05-17" description="Toute Première Livraison">
-      <action dev="houzecl" type="add">
-        Ceci est un exemple de diffusion des release notes associées à un EAR CLIENT BATCH
-      </action>
-    </release>
+        <release version="0.0.1" date="2007-05-17" description="Toute Première Livraison">
+            <action dev="houzecl" type="add">
+                Ceci est un exemple de diffusion des release notes associées à un EAR CLIENT BATCH
+            </action>
+        </release>
 
-  </body>
+    </body>
 
 </document>
