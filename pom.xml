@@ -12,12 +12,12 @@
 	</parent>
 
 	<groupId>ch.ge.cti.ct</groupId>
-	<artifactId>ct_jourferie_ge</artifactId>
+	<artifactId>jours-feries</artifactId>
 	<version>1.0.3-SNAPSHOT</version>
-	<name>CT - Jours Feries</name>
+	<name>Jours feries Geneve</name>
 	<packaging>jar</packaging>
 
-	<description>Ce projet est ... </description>
+	<description>Application fournissant les jours feries a l'Etat de Geneve</description>
 
 	<organization>
 		<name>CTI</name>
