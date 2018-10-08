@@ -120,7 +120,7 @@ public class TestFerie extends TestCase {
 
         try {
             Ferie.getJoursDTDEtatFermesDuMois(99999, Calendar.DECEMBER);
-            fail("pas d'exception lev�e");
+            fail("pas d'exception levée");
         } catch (Exception e) {
         }
     }
@@ -210,29 +210,29 @@ public class TestFerie extends TestCase {
         } catch (Exception e) {
             fail("erreur parsing...");
         }
-        assertTrue("22/04/11 : vendredi saint", Ferie.isJourFerie(d));
-        assertTrue("22/04/11 : vendredi saint", Ferie.isJourFerie(20110422));
+        assertTrue("22/04/11 : Vendredi-saint", Ferie.isJourFerie(d));
+        assertTrue("22/04/11 : Vendredi-saint", Ferie.isJourFerie(20110422));
 
         try {
             d = df.parse("25/04/2011");
         } catch (Exception e) {
             fail("erreur parsing...");
         }
-        assertTrue("25/04/11 : lundi de paque", Ferie.isJourFerie(d));
+        assertTrue("25/04/11 : lundi de Pâques", Ferie.isJourFerie(d));
 
         try {
             d = df.parse("02/06/2011");
         } catch (Exception e) {
             fail("erreur parsing...");
         }
-        assertTrue("02/06/11 : ascension", Ferie.isJourFerie(d));
+        assertTrue("02/06/11 : Ascension", Ferie.isJourFerie(d));
 
         try {
             d = df.parse("13/06/2011");
         } catch (Exception e) {
             fail("erreur parsing...");
         }
-        assertTrue("13/06/11 : lundi de pentecote", Ferie.isJourFerie(d));
+        assertTrue("13/06/11 : lundi de Pentecôte", Ferie.isJourFerie(d));
 
         try {
             d = df.parse("13/07/2011");
@@ -320,28 +320,28 @@ public class TestFerie extends TestCase {
         } catch (Exception e) {
             fail("erreur parsing...");
         }
-        assertTrue("22/04/11 : vendredi saint", Ferie.isJourEtatFerie(d));
+        assertTrue("22/04/11 : Vendredi-saint", Ferie.isJourEtatFerie(d));
 
         try {
             d = df.parse("25/04/2011");
         } catch (Exception e) {
             fail("erreur parsing...");
         }
-        assertTrue("25/04/11 : lundi de paques", Ferie.isJourEtatFerie(d));
+        assertTrue("25/04/11 : lundi de Pâques", Ferie.isJourEtatFerie(d));
 
         try {
             d = df.parse("02/06/2011");
         } catch (Exception e) {
             fail("erreur parsing...");
         }
-        assertTrue("02/06/11 : ascension", Ferie.isJourEtatFerie(d));
+        assertTrue("02/06/11 : Ascension", Ferie.isJourEtatFerie(d));
 
         try {
             d = df.parse("13/06/2011");
         } catch (Exception e) {
             fail("erreur parsing...");
         }
-        assertTrue("13/06/11 : lundi de pentecote", Ferie.isJourEtatFerie(d));
+        assertTrue("13/06/11 : lundi de Pentecôte", Ferie.isJourEtatFerie(d));
 
         try {
             d = df.parse("13/07/2011");
@@ -387,9 +387,9 @@ public class TestFerie extends TestCase {
         }
         cal.setTime(d);
         cal2.setTime(Ferie.getJourFerie(Ferie.ASCENSION, 2012));
-        assertEquals("ascension 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
-        assertEquals("ascension 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
-        assertEquals("ascension 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+        assertEquals("Ascension 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+        assertEquals("Ascension 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+        assertEquals("Ascension 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
 
         try {
             d = df.parse("9/04/2012");
@@ -398,9 +398,9 @@ public class TestFerie extends TestCase {
         }
         cal.setTime(d);
         cal2.setTime(Ferie.getJourFerie(Ferie.LUNDI_PAQUES, 2012));
-        assertEquals("paques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
-        assertEquals("paques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
-        assertEquals("paques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+        assertEquals("Pâques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+        assertEquals("Pâques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+        assertEquals("Pâques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
 
         try {
             d = df.parse("06/09/2012");
@@ -409,18 +409,18 @@ public class TestFerie extends TestCase {
         }
         cal.setTime(d);
         cal2.setTime(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, 2012));
-        assertEquals("paques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
-        assertEquals("paques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
-        assertEquals("paques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+        assertEquals("Pâques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+        assertEquals("Pâques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+        assertEquals("Pâques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
 
-        assertEquals("ascension 2012", 20120517, Ferie.getJourDTDFerie(Ferie.ASCENSION, 2012));
+        assertEquals("Ascension 2012", 20120517, Ferie.getJourDTDFerie(Ferie.ASCENSION, 2012));
 
         assertNull(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, -1));
         assertNull(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, 99999));
 
         try {
             Ferie.getJourFerie(99, 2012);
-            fail("exception non lev�e");
+            fail("exception non levée");
         } catch (Exception e) {
         }
 
@@ -539,9 +539,9 @@ public class TestFerie extends TestCase {
         }
         cal.setTime(d);
         cal2.setTime(Ferie.getJourFerie(Ferie.ASCENSION, 2012));
-        assertEquals("ascension 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
-        assertEquals("ascension 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
-        assertEquals("ascension 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+        assertEquals("Ascension 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+        assertEquals("Ascension 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+        assertEquals("Ascension 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
 
         try {
             d = df.parse("9/04/2012");
@@ -550,9 +550,9 @@ public class TestFerie extends TestCase {
         }
         cal.setTime(d);
         cal2.setTime(Ferie.getJourFerie(Ferie.LUNDI_PAQUES, 2012));
-        assertEquals("paques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
-        assertEquals("paques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
-        assertEquals("paques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+        assertEquals("Pâques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+        assertEquals("Pâques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+        assertEquals("Pâques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
 
         try {
             d = df.parse("06/09/2012");
@@ -561,18 +561,18 @@ public class TestFerie extends TestCase {
         }
         cal.setTime(d);
         cal2.setTime(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, 2012));
-        assertEquals("paques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
-        assertEquals("paques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
-        assertEquals("paques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+        assertEquals("Pâques 2012", cal.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
+        assertEquals("Pâques 2012", cal.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+        assertEquals("Pâques 2012", cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
 
-        assertEquals("ascension 2012", 20120517, Ferie.getJourDTDFerie(Ferie.ASCENSION, 2012));
+        assertEquals("Ascension 2012", 20120517, Ferie.getJourDTDFerie(Ferie.ASCENSION, 2012));
 
         assertNull(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, -1));
         assertNull(Ferie.getJourFerie(Ferie.JEUNE_GENEVOIS, 99999));
 
         try {
             Ferie.getJourFerie(99, 2012);
-            fail("exception non lev�e");
+            fail("exception non levée");
         } catch (Exception e) {
         }
 

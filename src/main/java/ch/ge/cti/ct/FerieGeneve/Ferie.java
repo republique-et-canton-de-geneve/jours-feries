@@ -1,10 +1,5 @@
 package ch.ge.cti.ct.FerieGeneve;
 
-/*
- * Cr le 27 mai 2004 par Patrick Giroud
- *
- */
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,81 +16,80 @@ import ch.ge.cti.ct.FerieGeneve.persistance.LectureConfig;
 import ch.ge.cti.ct.FerieGeneve.persistance.ParamFermesAble;
 
 /**
- * Cette classe utilitaire permet de connatre les jours fris. tat de Genve, les jours fris officiels sont
+ * Cette classe utilitaire permet de connaître les jours fériés à l'État de Genève.
+ * Les jours fériés officiels sont :
  * <ul>
  * <li>nouvel an <i>1<sup>er</sup> janvier</i>,</li>
- * <li>vendredi saint <i>2 jours avant P�ques</i>,</li>
- * <li>lundi de P�ques <i>1 jours apr�s P�ques</i>,</li>
- * <li>jeudi de l'Ascension <i>39 jours apr�s P�ques</i>,</li>
- * <li>lundi de Pentec�te <i>50 jours apr�s P�ques</i>,</li>
- * <li>f�te nationale <i>1<sup>er</sup> ao�t</i>,</li>
- * <li>je�ne genevois <i>jeudi qui suit le premier dimanche de septembre</i>,</li>
- * <li>No�l <i>25 d�cembre</i>,</li>
- * <li>Restauration de la R�publique <i>31 d�cembre</i></li>
+ * <li>Vendredi-saint <i>2 jours avant Pâques</i>,</li>
+ * <li>lundi de Pâques <i>1 jour après Pâques</i>,</li>
+ * <li>jeudi de l'Ascension <i>39 jours après Pâques</i>,</li>
+ * <li>lundi de Pentecôte <i>50 jours après Pâques</i>,</li>
+ * <li>fête nationale <i>1<sup>er</sup> août</i>,</li>
+ * <li>jeûne genevois <i>jeudi qui suit le premier dimanche de septembre</i>,</li>
+ * <li>Noël <i>25 décembre</i>,</li>
+ * <li>Restauration de la République <i>31 décembre</i></li>
  * </ul>
- * En plus, � l'�tat, il y a des jours ferm�s : le 1er mai, le lundi suivant le 1er ao�t si celui-ci tombe un
- * dimanche et les 24, 26, 27, 28, 29 et 30 d�cembre. Les m�thodes incluant ces jours f�ri�s suppl�mentaires
- * contiennent le mot Etat dans leur nom (getJoursEtatFermesDuMois(), isJourEtatFerie(), ....)
+ * En plus, à l'État, il y a des jours fermés : le 1er mai, le lundi suivant le 1er août si celui-ci tombe un
+ * dimanche et les 24, 26, 27, 28, 29 et 30 décembre. Les méthodes incluant ces jours fériés supplémentaires
+ * contiennent le mot "Etat" dans leur nom (getJoursEtatFermesDuMois(), isJourEtatFerie(), ....).
  * <br>
- * Les jours ouvrables sont les jours qui ne sont pas f�ri�s, qui ne sont pas samedi ni dimanche. De nouveaux, on a
- * la notion de jour ouvrable g�n�ral et de jour ouvrable � l'�tat de Gen�ve (m�thodes isJourOuvrable() et
+ * Les jours ouvrables sont les jours qui ne sont pas fériés, qui ne sont pas samedi ni dimanche. De nouveau, on a
+ * la notion de jour ouvrable général et de jour ouvrable à l'État de Genève (méthodes isJourOuvrable() et
  * isJourEtatOuvrable()).
  * <br>
- * Les m�thodes existent en 2 exemplaires. Le premier avec des dates aux formats java.util.Date et le second avec des
- * dates au format DTD <i>i.e.</i> yyyyMMdd.
+ * Les méthodes existent en 2 exemplaires. Le premier avec des dates aux formats java.util.Date et le second avec des
+ * dates au format DTD, par exemple yyyyMMdd.
  * <br>
- * Deux m�thodes auxiliaires testent si la date est un samedi ou un dimanche.
+ * Deux méthodes auxiliaires testent si la date est un samedi ou un dimanche.
  *
  * @author <a href="mailto:patrick.giroud@etat.ge.ch">Patrick Giroud</a>
- * @version $Revision: 1.11 $
  */
 public final class Ferie {
 
     /**
-     * Le premier jour de l'ann�e : 1<sup>er</sup> janvier.
+     * Le premier jour de l'année : 1<sup>er</sup> janvier.
      */
     public static final int NOUVEL_AN = 0;
-    AAA
 
     /**
-     * vendredi saint : 2 jours avant P�ques.
+     * Vendredi-saint : 2 jours avant Pâques.
      */
     public static final int VENDREDI_SAINT = 1;
 
     /**
-     * Le lendemain de P�ques
+     * Le lendemain de Pâques-
      */
     public static final int LUNDI_PAQUES = 2;
 
     /**
-     * Le jeudi de l'Ascension
+     * Le jeudi de l'Ascension.
      */
     public static final int ASCENSION = 3;
 
     /**
-     * Lendemain de Pentec�te
+     * Lendemain de Pentecôte.
      */
     public static final int LUNDI_PENTECOTE = 4;
 
     /**
-     * F�te nationale suisse : comm�more un trait� d'alliance pass� au d�but du mois d'ao�t 1291 entre "les
-     * hommes de la vall�e d'Uri, la communaut� de Schwytz et celle des hommes de la vall�e inf�rieure
+     * Fête nationale suisse : commémore un traité d'alliance passé au début du mois d'août 1291 entre "les
+     * hommes de la vallée d'Uri, la communauté de Schwytz et celle des hommes de la vallée inférieure
      * d'Unterwald".
      */
     public static final int FETE_NATIONALE = 5;
 
     /**
-     * Je�ne genevois
+     * Jeûne genevois.
      */
     public static final int JEUNE_GENEVOIS = 6;
 
     /**
-     * Noel.
+     * Noël.
      */
     public static final int NOEL = 7;
 
     /**
-     * Restauration de la R�publique du 31 d�cembre 1813 (fin de l'annexion de la R�publique de Gen�ve � la
+     * Restauration de la République du 31 décembre 1813 (fin de l'annexion de la République de Genève à la
      * France).
      */
     public static final int RESTAURATION_REPUBLIQUE = 8;
@@ -108,7 +102,7 @@ public final class Ferie {
 
     private static final int ECART_LUNDI_PENTECOTE_PAQUES = 50;
 
-    // tout cela pour �tre conforme sonar...
+    // tout cela pour être conforme sonar...
     private static final int NOEL_JOUR = 25;
 
     private static final int ANNEE_MAX = 10001;
@@ -133,13 +127,13 @@ public final class Ferie {
 
     private static final Logger LOG = Logger.getLogger(Ferie.class);
 
-    // permet de lire les donn�es concernant le param�trage des jours ferm�s
+    // permet de lire les données concernant le paramètrage des jours fermés
     private static ParamFermesAble lecteurParam;
 
     private static Map<Integer, String[]> joursFermetureEtat = new HashMap<Integer, String[]>();
 
     /**
-     * lecteur de param�tre par d�faut
+     * Lecteur de paramètres par défaut.
      */
     static {
         lecteurParam = new LectureConfig();
@@ -152,10 +146,8 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode teste si la date fournie en param�tre est un samedi
-     *
-     * @param pDate La date � tester
-     *
+     * Cette méthode teste si la date fournie en paramètre est un samedi.
+     * @param pDate La date à tester
      * @return true si la date est un samedi
      */
     public static boolean isSamedi(Date pDate) {
@@ -165,9 +157,9 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode teste si la date fournie en param�tre est un samedi
+     * Cette méthode teste si la date fournie en paramètre est un samedi
      *
-     * @param pDTDDate Un entier : la date � tester au format DTD (yyyyMMdd)
+     * @param pDTDDate Un entier : la date à tester au format DTD (yyyyMMdd)
      *
      * @return true si la date est un samedi
      */
@@ -177,9 +169,9 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode teste si la date fournie en param�tre est un dimanche
+     * Cette méthode teste si la date fournie en paramètre est un dimanche
      *
-     * @param pDate La date � tester
+     * @param pDate La date à tester
      *
      * @return true si la date est un dimanche
      */
@@ -190,9 +182,9 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode teste si la date fournie en param�tre est un dimanche
+     * Cette méthode teste si la date fournie en paramètre est un dimanche
      *
-     * @param pDTDDate Un entier : la date � tester au format DTD (yyyyMMdd)
+     * @param pDTDDate Un entier : la date à tester au format DTD (yyyyMMdd)
      *
      * @return true si la date est un dimanche
      */
@@ -202,11 +194,11 @@ public final class Ferie {
     }
 
     /**
-     * Retourne vrai si la date pass�e en argument est un jour f�ri�
+     * Retourne vrai si la date passée en argument est un jour férié
      *
      * @param pDate
      *
-     * @return <code>true</code> si le date est un jour f�ri� officiel.
+     * @return <code>true</code> si le date est un jour férié officiel.
      */
     public static boolean isJourFerie(Date pDate) {
         boolean result = false;
@@ -227,11 +219,11 @@ public final class Ferie {
     }
 
     /**
-     * Retourne vrai si la date pass�e en argument est un jour f�ri�
+     * Retourne vrai si la date passée en argument est un jour férié
      *
-     * @param pDTDDate Un entier correspondant � la date au format DTD (yyyyMMdd)
+     * @param pDTDDate Un entier correspondant à la date au format DTD (yyyyMMdd)
      *
-     * @return <code>true</code> si le date est un jour f�ri� officiel.
+     * @return <code>true</code> si le date est un jour férié officiel.
      */
     public static boolean isJourFerie(int pDTDDate) {
         Calendar cal = Calendar.getInstance();
@@ -239,12 +231,12 @@ public final class Ferie {
     }
 
     /**
-     * Retourne vrai si la date pass�e en argument est un jour f�ri� � l'�tat i.e. s'il s'agit d'un jour
-     * f�ri� officiel ou d'un jours ferm�s (1er mai, 26 d�cembre, ....)
+     * Retourne vrai si la date passée en argument est un jour férié à l'État i.e. s'il s'agit d'un jour
+     * férié officiel ou d'un jours fermés (1er mai, 26 décembre, ....)
      *
      * @param pDate
      *
-     * @return <code>true</code> si le date est un jour f�ri� officiel.
+     * @return <code>true</code> si le date est un jour férié officiel.
      */
     public static boolean isJourEtatFerie(Date pDate) {
         boolean result = false;
@@ -262,8 +254,8 @@ public final class Ferie {
             }
         }
         if (!result) {
-            // on rajoute ici le test sur les jours qui ne sont pas f�ri�s officiels mais qui sont ferm�s �
-            // l'�tat.
+            // on rajoute ici le test sur les jours qui ne sont pas fériés officiels mais qui sont fermés à
+            // l'État.
             dates = getJoursEtatFermesDuMois(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
             if (null != dates) {
                 for (int i = 0; i < dates.length; i++) {
@@ -279,12 +271,12 @@ public final class Ferie {
     }
 
     /**
-     * Retourne vrai si la date pass�e en argument est un jour f�ri� � l'�tat i.e. s'il s'agit d'un jour
-     * f�ri� officiel ou d'un jours ferm�s (1er mai, 26 d�cembre, ....)
+     * Retourne vrai si la date passée en argument est un jour férié à l'État i.e. s'il s'agit d'un jour
+     * férié officiel ou d'un jours fermés (1er mai, 26 décembre, ....)
      *
-     * @param pDTDDate Un entier correspondant � la date au format DTD (yyyyMMdd)
+     * @param pDTDDate Un entier correspondant à la date au format DTD (yyyyMMdd)
      *
-     * @return <code>true</code> si le date est un jour f�ri� officiel.
+     * @return <code>true</code> si le date est un jour férié officiel.
      */
     public static boolean isJourEtatFerie(int pDTDDate) {
         Calendar cal = Calendar.getInstance();
@@ -292,63 +284,63 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est pas
-     * f�ri�.
+     * Cette méthode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est pas
+     * férié.
      *
      * @param pDate La date
      *
-     * @return <code>true</code> si la date pass�e en param�tre est un jour ouvrable.
+     * @return <code>true</code> si la date passée en paramètre est un jour ouvrable.
      */
     public static boolean isJourOuvrable(Date pDate) {
         return !(isSamedi(pDate) || isDimanche(pDate) || isJourFerie(pDate));
     }
 
     /**
-     * Cette m�thode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est pas
-     * f�ri�.
+     * Cette méthode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est pas
+     * férié.
      *
-     * @param pDtdDate Un entier correspondant � la date au format DTD (yyyyMMdd)
+     * @param pDtdDate Un entier correspondant à la date au format DTD (yyyyMMdd)
      *
-     * @return <code>true</code> si la date pass�e en param�tre est un jour ouvrable.
+     * @return <code>true</code> si la date passée en paramètre est un jour ouvrable.
      */
     public static boolean isJourOuvrable(int pDtdDate) {
         return !(isSamedi(pDtdDate) || isDimanche(pDtdDate) || isJourFerie(pDtdDate));
     }
 
     /**
-     * Cette m�thode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est ni un jour
-     * f�ri� ni un jour ferm� � l'�tat.
+     * Cette méthode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est ni un jour
+     * férié ni un jour fermé à l'État.
      *
      * @param pDate La date
      *
-     * @return <code>true</code> si la date pass�e en param�tre est un jour ouvrable au sens de l'�tat..
+     * @return <code>true</code> si la date passée en paramètre est un jour ouvrable au sens de l'État..
      */
     public static boolean isJourEtatOuvrable(Date pDate) {
         return !(isSamedi(pDate) || isDimanche(pDate) || isJourEtatFerie(pDate));
     }
 
     /**
-     * Cette m�thode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est ni un jour
-     * f�ri� ni un jour ferm� � l'�tat.
+     * Cette méthode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est ni un jour
+     * férié ni un jour fermé à l'État.
      *
-     * @param pDtdDate Un entier correspondant � la date au format DTD (yyyyMMdd)
+     * @param pDtdDate Un entier correspondant à la date au format DTD (yyyyMMdd)
      *
-     * @return <code>true</code> si la date pass�e en param�tre est un jour ouvrable au sens de l'�tat..
+     * @return <code>true</code> si la date passée en paramètre est un jour ouvrable au sens de l'État..
      */
     public static boolean isJourEtatOuvrable(int pDtdDate) {
         return !(isSamedi(pDtdDate) || isDimanche(pDtdDate) || isJourEtatFerie(pDtdDate));
     }
 
     /**
-     * Cette m�thode permet d'obtenir la date d'un jour f�ri� pour une ann�e donn�e. Par exemple, pour obtenir
-     * la date du jeudi de l'ascension de l'ann�e 2003, on appelera <code>getJourFerie(UtiFerie.ASCENSION,2003)
+     * Cette méthode permet d'obtenir la date d'un jour férié pour une année donnée. Par exemple, pour obtenir
+     * la date du jeudi de l'ascension de l'année 2003, on appelera <code>getJourFerie(UtiFerie.ASCENSION,2003)
      * </code>.
      *
      * @param pJourFerie Une des constantes <code>NOUVEL_AN, VENDREDI_SAINT, LUNDI_PAQUES, ASCENSION, LUNDI_PENTECOTE,
      *                   FETE_NATIONALE, JEUNE_GENEVOIS, NOEL, RESTAURATION_REPUBLIQUE</code>.
-     * @param pAnnee     Une ann�e comprise entre 0 et 10000.
+     * @param pAnnee     Une année comprise entre 0 et 10000.
      *
-     * @return La date du jour f�ri�
+     * @return La date du jour férié
      */
     public static Date getJourFerie(int pJourFerie, int pAnnee) {
         Date date = null;
@@ -411,22 +403,22 @@ public final class Ferie {
                 break;
 
             default:
-                throw new IllegalArgumentException("pJourFerie demand� n'est pas dans la liste");
+                throw new IllegalArgumentException("pJourFerie demandé n'est pas dans la liste");
             }
         }
         return date;
     }
 
     /**
-     * Cette m�thode permet d'obtenir la date d'un jour f�ri� pour une ann�e donn�e. Par exemple, pour obtenir
-     * la date du jeudi de l'ascension de l'ann�e 2003, on appelera <code>getJourDTDFerie(UtiFerie.ASCENSION,2003)
+     * Cette méthode permet d'obtenir la date d'un jour férié pour une année donnée. Par exemple, pour obtenir
+     * la date du jeudi de l'ascension de l'année 2003, on appelera <code>getJourDTDFerie(UtiFerie.ASCENSION,2003)
      * </code>.
      *
      * @param pJourFerie Une des constantes <code>NOUVEL_AN, VENDREDI_SAINT, LUNDI_PAQUES, ASCENSION, LUNDI_PENTECOTE,
      *                   FETE_NATIONALE, JEUNE_GENEVOIS, NOEL, RESTAURATION_REPUBLIQUE</code>
-     * @param pAnnee     Une ann�e comprise entre 0 et 10000.
+     * @param pAnnee     Une année comprise entre 0 et 10000.
      *
-     * @return Un entier : la date du jour f�ri� au format DTD (yyyyMMdd)
+     * @return Un entier : la date du jour férié au format DTD (yyyyMMdd)
      */
     public static int getJourDTDFerie(int pJourFerie, int pAnnee) {
         Calendar cal = Calendar.getInstance();
@@ -440,15 +432,15 @@ public final class Ferie {
      *
      * @param pAnnee
      *
-     * @return la date de P�ques (l'heure est fix�e � midi)
+     * @return la date de Pâques (l'heure est fixàe à midi)
      */
     private static Date getDatePaques(int pAnnee) {
         Calendar cal = Calendar.getInstance();
         int nombreOr = pAnnee % MOD_PAQUE + 1;
         int siecle = pAnnee / 100 + 1;
 
-        // Nombre d'ann�e divisible par 4 qui ne sont pas bisextile. Comprend le d�calage
-        // du pape Gr�goire
+        // Nombre d'année divisible par 4 qui ne sont pas bisextile. Comprend le dàcalage
+        // du pape Gràgoire
         int pasBisextile = 3 * siecle / 4 - 12;
 
         int synchroLune = (8 * siecle + 5) / 25 - 5;
@@ -460,8 +452,8 @@ public final class Ferie {
             epacte++;
         }
 
-        // P�ques est le premier dimanche qui suit la pleine lune apparaissant
-        // le 21 mars ou apr�s le 21 mars.
+        // Pâques est le premier dimanche qui suit la pleine lune apparaissant
+        // le 21 mars ou apràs le 21 mars.
         int paque = 44 - epacte;
         if (paque < 21) {
             paque += 30;
@@ -484,36 +476,36 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la date du je�ne genevois pour une ann�e donn�e. Le je�ne genevois est le jeudi
+     * Cette méthode retourne la date du jeûne genevois pour une année donnée. Le jeûne genevois est le jeudi
      * qui suit le premier dimanche de septembre.
      *
      * @param pAnnee
      *
-     * @return la date du je�ne genevois
+     * @return la date du jeûne genevois
      */
     private static Date getJeuneGenevois(int pAnnee) {
         Calendar cal = Calendar.getInstance();
         setDefaultTime(cal);
-        // On fixe le calendrier au 1er septembre de l'ann�e pass�e en param�tre
+        // On fixe le calendrier au 1er septembre de l'année passée en paramètre
         cal.set(Calendar.DATE, 1);
         cal.set(Calendar.MONTH, Calendar.SEPTEMBER);
         cal.set(Calendar.YEAR, pAnnee);
-        // On boucle jusqu'� tomber un dimanche
+        // On boucle jusqu'à tomber un dimanche
         while (Calendar.SUNDAY != cal.get(Calendar.DAY_OF_WEEK)) {
             cal.add(Calendar.DATE, 1);
         }
-        // Le je�ne genevois est le jeudi qui suit ce dimanche soit 4 jours plus tard
+        // Le jeûne genevois est le jeudi qui suit ce dimanche soit 4 jours plus tard
         cal.add(Calendar.DATE, 4);
         return cal.getTime();
     }
 
     /**
-     * Cette m�thode retourne le tableau des jours f�ri�s de l'ann�e pass�e en param�tre. Le tableau est
-     * tri� par ordre chronologique croissant.
+     * Cette méthode retourne le tableau des jours fériés de l'année passée en paramètre. Le tableau est
+     * trià par ordre chronologique croissant.
      *
      * @param pAnnee
      *
-     * @return le tableau des jours f�ri�s
+     * @return le tableau des jours fériés
      */
     public static Date[] getJoursFeries(int pAnnee) {
         Date[] dates = new Date[9];
@@ -527,49 +519,49 @@ public final class Ferie {
         cal.set(Calendar.YEAR, pAnnee);
         dates[NOUVEL_AN] = cal.getTime();
 
-        // F�te nationale
+        // Fàte nationale
         cal.set(Calendar.MONTH, Calendar.AUGUST);
         cal.set(Calendar.YEAR, pAnnee);
         dates[FETE_NATIONALE] = cal.getTime();
 
-        // No�l
+        // Noàl
         cal.set(Calendar.DATE, NOEL_JOUR);
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
         cal.set(Calendar.YEAR, pAnnee);
         dates[NOEL] = cal.getTime();
 
-        // Restauration de la R�publique
+        // Restauration de la Ràpublique
         cal.set(Calendar.DATE, RESTAURATION_JOUR);
         dates[RESTAURATION_REPUBLIQUE] = cal.getTime();
 
-        // On continue avec les dates qui d�pendent de la date de P�ques
+        // On continue avec les dates qui dàpendent de la date de Pâques
         // Vendredi saint
         cal.setTime(getDatePaques(pAnnee));
         cal.add(Calendar.DATE, ECART_VENDREDI_SAINT_PAQUES);
         dates[VENDREDI_SAINT] = cal.getTime();
-        // Lundi de P�ques
+        // Lundi de Pâques
         cal.add(Calendar.DATE, ECART_LUNDI_PAQUES - ECART_VENDREDI_SAINT_PAQUES);
         dates[LUNDI_PAQUES] = cal.getTime();
         // Jeudi de l'ascension
         cal.add(Calendar.DATE, ECART_ASCENSION_PAQUES - ECART_LUNDI_PAQUES);
         dates[ASCENSION] = cal.getTime();
-        // Lundi de Pentec�te
+        // Lundi de Pentecôte
         cal.add(Calendar.DATE, ECART_LUNDI_PENTECOTE_PAQUES - ECART_ASCENSION_PAQUES);
         dates[LUNDI_PENTECOTE] = cal.getTime();
 
-        // Reste le je�ne genevois
+        // Reste le jeûne genevois
         dates[JEUNE_GENEVOIS] = getJeuneGenevois(pAnnee);
 
         return dates;
     }
 
     /**
-     * Cette m�thode retourne le tableau des jours f�ri�s de l'ann�e pass�e en param�tre. Le tableau est
-     * tri� par ordre chronologique croissant.
+     * Cette méthode retourne le tableau des jours fériés de l'année passée en paramètre. Le tableau est
+     * trià par ordre chronologique croissant.
      *
      * @param pAnnee
      *
-     * @return le tableau des jours f�ri�s au format DTD (yyyyMMdd)
+     * @return le tableau des jours fériés au format DTD (yyyyMMdd)
      */
     public static int[] getJoursDTDFeries(int pAnnee) {
         Calendar cal = Calendar.getInstance();
@@ -582,26 +574,26 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne les jours ferm�s d'un mois donn� et d'une ann�e donn�e. Les jours ferm�s ne
-     * sont pas des jours f�ri�s officiels.
+     * Cette méthode retourne les jours fermés d'un mois donné et d'une année donnée. Les jours fermés ne
+     * sont pas des jours fériés officiels.
      * <br>
-     * <strong>Attention</strong>, le param�tre pMois est le mois au sens du Calendar java
+     * <strong>Attention</strong>, le paramètre pMois est le mois au sens du Calendar java
      * <i>i.e.</i> Calendar.JANUARY = 0, .....
      *
-     * @param pAnnee une ann�e comprise entre 0 et 10000.
+     * @param pAnnee une année comprise entre 0 et 10000.
      * @param pMois  Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
      *
-     * @return Un tableau (qui peut �tre vide) contenant les jours ferm�s du mois.
+     * @return Un tableau (qui peut être vide) contenant les jours fermés du mois.
      */
     public static Date[] getJoursEtatFermesDuMois(int pAnnee, int pMois) {
         Date[] dates = new Date[0];
-        // Teste si les param�tres sont bien entre les bornes voulues
+        // Teste si les paramètres sont bien entre les bornes voulues
         if (pAnnee > -1 && pAnnee < ANNEE_MAX && pMois > -1 && pMois < NBR_MOIS) {
             Calendar cal;
 
             switch (pMois) {
             case Calendar.JANUARY:
-                // Au mois de janvier si le 1er janvier tombe un dimanche, le 2 janvier est ferm�
+                // Au mois de janvier si le 1er janvier tombe un dimanche, le 2 janvier est fermé
                 cal = Calendar.getInstance();
                 setDefaultTime(cal);
                 cal.set(pAnnee, Calendar.JANUARY, 1);
@@ -615,7 +607,7 @@ public final class Ferie {
                 break;
 
             case Calendar.MAY:
-                // Au mois de mai, le 1er mai est ferm�
+                // Au mois de mai, le 1er mai est fermé
                 dates = new Date[1];
                 cal = Calendar.getInstance();
                 setDefaultTime(cal);
@@ -624,7 +616,7 @@ public final class Ferie {
                 break;
 
             case Calendar.AUGUST:
-                // Au mois d'ao�t, si le 1er ao�t tombe un dimanche, il est rattrap� le lundi suivant
+                // Au mois d'aoàt, si le 1er aoàt tombe un dimanche, il est rattrapà le lundi suivant
                 cal = Calendar.getInstance();
                 setDefaultTime(cal);
                 cal.set(pAnnee, Calendar.AUGUST, 1);
@@ -638,7 +630,7 @@ public final class Ferie {
                 break;
 
             case Calendar.DECEMBER:
-                // Au mois de d�cembre, les 24, 26, 27, 28, 29 et 30 d�cembre �taient ferm�s avant 2011
+                // Au mois de décembre, les 24, 26, 27, 28, 29 et 30 décembre àtaient fermés avant 2011
                 if (pAnnee < ANNEE_PARAM) {
                     cal = Calendar.getInstance();
                     setDefaultTime(cal);
@@ -662,7 +654,7 @@ public final class Ferie {
                 break;
             }
 
-            // apr�s 2011 les dates de fermetures sont param�tr�es
+            // aprés 2011 les dates de fermetures sont paramàtràes
             if (pAnnee >= ANNEE_PARAM) {
                 List<Date> joursFermes = getJoursFermesParConseilEtat(pAnnee, pMois);
                 if (dates != null) {
@@ -674,7 +666,7 @@ public final class Ferie {
             return dates;
         } else {
             throw new IllegalArgumentException(
-                    "L'ann�e doit �tre comprise entre 1 et 10000 et le mois entre Calendar.JANUARY et Calendar"
+                    "L'année doit être comprise entre 1 et 10000 et le mois entre Calendar.JANUARY et Calendar"
                             + ".DECEMBER.");
         }
     }
@@ -709,16 +701,16 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne les jours ferm�s d'un mois donn� et d'une ann�e donn�e. Les jours ferm�s ne
-     * sont pas des jours f�ri�s officiels.
+     * Cette méthode retourne les jours fermés d'un mois donné et d'une année donnée. Les jours fermés ne
+     * sont pas des jours fériés officiels.
      * <br>
-     * <strong>Attention</strong>, le param�tre pMois est le mois au sens du Calendar java
+     * <strong>Attention</strong>, le paramètre pMois est le mois au sens du Calendar java
      * <i>i.e.</i> Calendar.JANUARY = 0, .....
      *
-     * @param pAnnee une ann�e comprise entre 0 et 10000.
+     * @param pAnnee une année comprise entre 0 et 10000.
      * @param pMois  Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
      *
-     * @return Un tableau (qui peut �tre vide) contenant les jours f�ri�s du mois au format DTD (yyyyMMdd).
+     * @return Un tableau (qui peut être vide) contenant les jours fériés du mois au format DTD (yyyyMMdd).
      */
     public static int[] getJoursDTDEtatFermesDuMois(int pAnnee, int pMois) {
         Calendar cal = Calendar.getInstance();
@@ -733,44 +725,44 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne les jours f�ri�s d'un mois donn� et d'une ann�e donn�e.
+     * Cette méthode retourne les jours fériés d'un mois donné et d'une année donnée.
      * <br>
-     * <strong>Attention</strong>, le param�tre pMois est le mois au sens du Calendar java
+     * <strong>Attention</strong>, le paramètre pMois est le mois au sens du Calendar java
      * <i>i.e.</i> Calendar.JANUARY = 0, .....
      *
-     * @param pAnnee une ann�e comprise entre 0 et 10000.
+     * @param pAnnee une année comprise entre 0 et 10000.
      * @param pMois  Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
      *
-     * @return Un tableau (qui peut �tre vide) contenant les jours f�ri�s du mois.
+     * @return Un tableau (qui peut être vide) contenant les jours fériés du mois.
      */
     public static Date[] getJoursFeriesDuMois(int pAnnee, int pMois) {
         Date[] dates = null;
-        // Teste si les param�tres sont bien entre les bornes voulues
+        // Teste si les paramètres sont bien entre les bornes voulues
         if (pAnnee > -1 && pAnnee < ANNEE_MAX && pMois > -1 && pMois < NBR_MOIS) {
             Calendar cal;
             int index;
             Date vendrediSaint, lundiPaques, ascension, lundiPentecote;
             switch (pMois) {
             case Calendar.JANUARY:
-                // Il n'y a qu'un jour f�ri� au mois de janvier : le nouvel an
+                // Il n'y a qu'un jour férié au mois de janvier : le nouvel an
                 dates = new Date[1];
                 dates[0] = getJourFerie(NOUVEL_AN, pAnnee);
                 break;
 
             case Calendar.MARCH:
-                // Au mois de mars, il peut y avoir le vendredi saint et le lundi de P�ques
+                // Au mois de mars, il peut y avoir le vendredi saint et le lundi de Pâques
                 cal = Calendar.getInstance();
                 index = 0;
                 vendrediSaint = getJourFerie(VENDREDI_SAINT, pAnnee);
                 lundiPaques = null;
                 cal.setTime(vendrediSaint);
                 if (Calendar.MARCH == cal.get(Calendar.MONTH)) {
-                    // Cas o� le vendredi saint est en mars
+                    // Cas oà le vendredi saint est en mars
                     index = 1;
                     lundiPaques = getJourFerie(LUNDI_PAQUES, pAnnee);
                     cal.setTime(lundiPaques);
                     if (Calendar.MARCH == cal.get(Calendar.MONTH)) {
-                        // Cas o� le lundi de P�ques est aussi en mars
+                        // Cas oà le lundi de Pâques est aussi en mars
                         index = 2;
                     }
                 }
@@ -804,27 +796,27 @@ public final class Ferie {
                 lundiPentecote = null;
                 cal.setTime(vendrediSaint);
                 if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
-                    // Cas o� le vendredi saint est au mois d'avril. Dans ce cas, l'ascension et le lundi
-                    // de Pentec�te ne peuvent pas �tre au mois d'avril.
-                    // Par contre, forc�ment, le lundi de P�ques est aussi au mois d'avril.
+                    // Cas oà le vendredi saint est au mois d'avril. Dans ce cas, l'Ascension et le lundi
+                    // de Pentecôte ne peuvent pas être au mois d'avril.
+                    // Par contre, forcément, le lundi de Pâques est aussi au mois d'avril.
                     index = 1;
                 } else {
                     // Le vendredi saint est au mois de mars
                     cal.setTime(lundiPaques);
                     if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
-                        // Cas o� le lundi de P�ques est au mois d'avril
+                        // Cas oà le lundi de Pâques est au mois d'avril
                         index = 2;
                     } else {
-                        // Cas o� le lundi de P�ques est au mois de mars
+                        // Cas oà le lundi de Pâques est au mois de mars
                         lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
                         cal.setTime(lundiPentecote);
                         if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
-                            // Cas o� le lundi de Pentec�te est au mois d'avril
-                            // Forc�ment, l'ascension est aussi au mois d'avril
+                            // Cas oà le lundi de Pentecôte est au mois d'avril
+                            // Forcàment, l'ascension est aussi au mois d'avril
                             index = 4;
                         } else {
-                            // Si le lundi de Pentec�te n'est pas au mois d'avril,
-                            // l'ascension peut tout de m�me �tre au mois d'avril
+                            // Si le lundi de Pentecôte n'est pas au mois d'avril,
+                            // l'ascension peut tout de màme être au mois d'avril
                             ascension = getJourFerie(ASCENSION, pAnnee);
                             cal.setTime(ascension);
                             if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
@@ -867,24 +859,24 @@ public final class Ferie {
                 break;
 
             case Calendar.MAY:
-                // Au mois de mai, il peut y avoir l'ascension et le lundi de Pentec�te
+                // Au mois de mai, il peut y avoir l'ascension et le lundi de Pentecôte
                 cal = Calendar.getInstance();
                 index = 0;
                 ascension = getJourFerie(ASCENSION, pAnnee);
                 lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
                 cal.setTime(ascension);
                 if (Calendar.MAY == cal.get(Calendar.MONTH)) {
-                    // Cas o� l'ascension est au mois de mai
+                    // Cas oà l'ascension est au mois de mai
                     index = 1;
                     cal.setTime(lundiPentecote);
                     if (Calendar.MAY == cal.get(Calendar.MONTH)) {
-                        // Cas o� l'ascension et le lundi de Pentec�te sont au mois de mai.
+                        // Cas oà l'ascension et le lundi de Pentecôte sont au mois de mai.
                         index = 3;
                     }
                 } else {
                     cal.setTime(lundiPentecote);
                     if (Calendar.MAY == cal.get(Calendar.MONTH)) {
-                        // Cas o� l'ascension est au mois d'avril et le lundi de Pentec�te au mois de mai.
+                        // Cas oà l'ascension est au mois d'avril et le lundi de Pentecôte au mois de mai.
                         index = 2;
                     }
                 }
@@ -915,20 +907,20 @@ public final class Ferie {
                 break;
 
             case Calendar.JUNE:
-                // Il est possible d'avoir l'ascension et le lundi de Pentec�te au mois de juin
+                // Il est possible d'avoir l'ascension et le lundi de Pentecôte au mois de juin
                 cal = Calendar.getInstance();
                 index = 0;
                 ascension = getJourFerie(ASCENSION, pAnnee);
                 lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
                 cal.setTime(ascension);
                 if (Calendar.JUNE == cal.get(Calendar.MONTH)) {
-                    // Cas o� l'ascension est au mois de juin, alors forc�ment le lundi de Pentec�te
+                    // Cas oà l'ascension est au mois de juin, alors forcément le lundi de Pentecôte
                     // est aussi au mois de juin
                     index = 1;
                 } else {
                     cal.setTime(lundiPentecote);
                     if (Calendar.JUNE == cal.get(Calendar.MONTH)) {
-                        // Cas o� l'ascension est au mois de mai et le lundi de Pentec�te au mois de juin
+                        // Cas oà l'ascension est au mois de mai et le lundi de Pentecôte au mois de juin
                         index = 2;
                     }
                 }
@@ -954,19 +946,19 @@ public final class Ferie {
                 break;
 
             case Calendar.AUGUST:
-                // Un seul jour f�ri� : la f�te nationale suisse
+                // Un seul jour férié : la fête nationale suisse
                 dates = new Date[1];
                 dates[0] = getJourFerie(FETE_NATIONALE, pAnnee);
                 break;
 
             case Calendar.SEPTEMBER:
-                // Un seul jour f�ri� : le je�ne genevois
+                // Un seul jour férié : le jeûne genevois
                 dates = new Date[1];
                 dates[0] = getJeuneGenevois(pAnnee);
                 break;
 
             case Calendar.DECEMBER:
-                // 2 jours f�ri�s : No�l et le 31 d�cembre (Restauration de la R�publique)
+                // 2 jours fériés : Noàl et le 31 décembre (Restauration de la Ràpublique)
                 dates = new Date[2];
                 dates[0] = getJourFerie(NOEL, pAnnee);
                 dates[1] = getJourFerie(RESTAURATION_REPUBLIQUE, pAnnee);
@@ -980,21 +972,21 @@ public final class Ferie {
         } else {
             assert false : pMois;
             throw new IllegalArgumentException(
-                    "L'ann�e doit �tre comprise entre 1 et 10000 et le mois entre Calendar.JANUARY et Calendar"
+                    "L'année doit être comprise entre 1 et 10000 et le mois entre Calendar.JANUARY et Calendar"
                             + ".DECEMBER.");
         }
     }
 
     /**
-     * Cette m�thode retourne les jours f�ri�s d'un mois donn� et d'une ann�e donn�e.
+     * Cette méthode retourne les jours fériés d'un mois donné et d'une année donnée.
      * <br>
-     * <strong>Attention</strong>, le param�tre pMois est le mois au sens du Calendar java
+     * <strong>Attention</strong>, le paramètre pMois est le mois au sens du Calendar java
      * <i>i.e.</i> Calendar.JANUARY = 0, .....
      *
-     * @param pAnnee une ann�e comprise entre 0 et 10000.
+     * @param pAnnee une année comprise entre 0 et 10000.
      * @param pMois  Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
      *
-     * @return Un tableau (qui peut �tre vide) contenant les jours f�ri�s du mois au format DTD (yyyyMMdd).
+     * @return Un tableau (qui peut être vide) contenant les jours fériés du mois au format DTD (yyyyMMdd).
      */
     public static int[] getJoursDTDFeriesDuMois(int pAnnee, int pMois) {
         Calendar cal = Calendar.getInstance();
@@ -1009,15 +1001,15 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la date pass�e en param�tre (pDate) � laquelle on a ajout� pNbreJoursOuvrables
-     * jours ouvrables. Les jours ouvrables sont les jours de la semaine except�s le samedi, le dimanche, les jours
-     * f�ri�s et les jours ferm�s � l'�tat. Par exemple, si pDate repr�sente le 23 d�cembre 2004, l'appel
+     * Cette méthode retourne la date passée en paramètre (pDate) à laquelle on a ajouté pNbreJoursOuvrables
+     * jours ouvrables. Les jours ouvrables sont les jours de la semaine excepté le samedi, le dimanche, les jours
+     * fériés et les jours fermés à l'État. Par exemple, si pDate représente le 23 décembre 2004, l'appel
      * addJoursOuvrables(pDate,6) doit retourner le 10 janvier 2005.
      *
-     * @param pDate               La date � laquelle on veut ajouter des jours ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables � ajouter ou soustraire.
+     * @param pDate               La date à laquelle on veut ajouter des jours ouvrables
+     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter ou soustraire.
      *
-     * @return pDate augment�e de pNbreJoursOuvrables
+     * @return pDate augmentàe de pNbreJoursOuvrables
      */
     public static Date addJoursEtatOuvrables(final Date pDate, final int pNbreJoursOuvrables) {
         Calendar cal = Calendar.getInstance();
@@ -1053,16 +1045,16 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la date pass�e en param�tre (pDate) � laquelle on a ajout� pNbreJoursOuvrables
-     * jours ouvrables. Les jours ouvrables sont les jours de la semaine except�s le samedi, le dimanche, les jours
-     * f�ri�s et les jours ferm�s � l'�tat. Par exemple, si pDate repr�sente le 23 d�cembre 2004, l'appel
+     * Cette méthode retourne la date passée en paramètre (pDate) à laquelle on a ajouté pNbreJoursOuvrables
+     * jours ouvrables. Les jours ouvrables sont les jours de la semaine excepté le samedi, le dimanche, les jours
+     * fériés et les jours fermés à l'État. Par exemple, si pDate représente le 23 décembre 2004, l'appel
      * addJoursOuvrables(pDate,6) doit retourner le 10 janvier 2005.
      *
-     * @param pDTDDate            Un entier : la date au format DTD (yyyyMMdd) � laquelle on veut ajouter des jours
+     * @param pDTDDate            Un entier : la date au format DTD (yyyyMMdd) à laquelle on veut ajouter des jours
      *                            ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables � ajouter. Ce nombre doit �tre &gt;=0.
+     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter. Ce nombre doit être &gt;=0.
      *
-     * @return Un entier : pDate augment�e de pNbreJoursOuvrables au format DTD (yyyyMMdd)
+     * @return Un entier : pDate augmentàe de pNbreJoursOuvrables au format DTD (yyyyMMdd)
      */
     public static int addJoursEtatOuvrables(final int pDTDDate, final int pNbreJoursOuvrables) {
         Calendar cal = Calendar.getInstance();
@@ -1070,15 +1062,15 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la date pass�e en param�tre (pDate) � laquelle on a ajout� pNbreJoursOuvrables
-     * jours ouvrables. Les jours ouvrables sont les jours de la semaine except�s le samedi, le dimanche et les jours
-     * f�ri�s officiels. Par exemple, si pDate repr�sente le 23 d�cembre 2004, l'appel
+     * Cette méthode retourne la date passée en paramètre (pDate) à laquelle on a ajouté pNbreJoursOuvrables
+     * jours ouvrables. Les jours ouvrables sont les jours de la semaine exceptés le samedi, le dimanche et les jours
+     * fériés officiels. Par exemple, si pDate représente le 23 décembre 2004, l'appel
      * addJoursOuvrables(pDate,6) doit retourner le 2 janvier 2005.
      *
-     * @param pDate               La date � laquelle on veut ajouter des jours ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables � ajouter ou soustraire..
+     * @param pDate               La date à laquelle on veut ajouter des jours ouvrables
+     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter ou soustraire..
      *
-     * @return pDate augment�e de pNbreJoursOuvrables
+     * @return pDate augmentàe de pNbreJoursOuvrables
      */
     public static Date addJoursOuvrables(final Date pDate, final int pNbreJoursOuvrables) {
         Calendar cal = Calendar.getInstance();
@@ -1114,16 +1106,16 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la date pass�e en param�tre (pDate) � laquelle on a ajout� pNbreJoursOuvrables
-     * jours ouvrables. Les jours ouvrables sont les jours de la semaine except�s le samedi, le dimanche et les jours
-     * f�ri�s officiels. Par exemple, si pDate repr�sente le 23 d�cembre 2004, l'appel
+     * Cette méthode retourne la date passée en paramètre (pDate) à laquelle on a ajouté pNbreJoursOuvrables
+     * jours ouvrables. Les jours ouvrables sont les jours de la semaine exceptés le samedi, le dimanche et les jours
+     * fériés officiels. Par exemple, si pDate représente le 23 décembre 2004, l'appel
      * addJoursOuvrables(pDate,6) doit retourner le 2 janvier 2005.
      *
-     * @param pDTDDate            Un entier : la date au format DTD (yyyyMMdd) � laquelle on veut ajouter des jours
+     * @param pDTDDate            Un entier : la date au format DTD (yyyyMMdd) à laquelle on veut ajouter des jours
      *                            ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables � ajouter. Ce nombre doit �tre &gt;=0.
+     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter. Ce nombre doit être &gt;=0.
      *
-     * @return Un entier : pDate augment�e de pNbreJoursOuvrables au format DTD (yyyyMMdd)
+     * @return Un entier : pDate augmentàe de pNbreJoursOuvrables au format DTD (yyyyMMdd)
      */
     public static int addJoursOuvrables(final int pDTDDate, final int pNbreJoursOuvrables) {
         Calendar cal = Calendar.getInstance();
@@ -1131,12 +1123,12 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la prochaine date suivant la date donn�e en param�tre qui est un jour ouvrable. Si
-     * la date donn�e en param�tre est un jour ouvrable, c'est cette m�me date qui est retourn�e.
+     * Cette méthode retourne la prochaine date suivant la date donnée en paramètre qui est un jour ouvrable. Si
+     * la date donnée en paramètre est un jour ouvrable, c'est cette màme date qui est retournàe.
      *
-     * @param pDate La date � partir de laquelle on veut le prochain jour ouvrable
+     * @param pDate La date à partir de laquelle on veut le prochain jour ouvrable
      *
-     * @return La date suivant la date donn�e en param�tre qui est ouvrable.
+     * @return La date suivant la date donnée en paramètre qui est ouvrable.
      */
     public static Date getProchainJourOuvrable(final Date pDate) {
         Calendar cal = Calendar.getInstance();
@@ -1150,13 +1142,13 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la prochaine date suivant la date donn�e en param�tre qui est un jour ouvrable. Si
-     * la date donn�e en param�tre est un jour ouvrable, c'est cette m�me date qui est retourn�e.
+     * Cette méthode retourne la prochaine date suivant la date donnée en paramètre qui est un jour ouvrable. Si
+     * la date donnée en paramètre est un jour ouvrable, c'est cette màme date qui est retournàe.
      *
-     * @param pDTDDate Un entier : la date au format DTD (yyyyMMdd) � partir de laquelle on veut le prochain jour
+     * @param pDTDDate Un entier : la date au format DTD (yyyyMMdd) à partir de laquelle on veut le prochain jour
      *                 ouvrable
      *
-     * @return La date au format DTD (yyyyMMdd) suivant la date donn�e en param�tre qui est ouvrable.
+     * @return La date au format DTD (yyyyMMdd) suivant la date donnée en paramètre qui est ouvrable.
      */
     public static int getProchainJourOuvrable(final int pDTDDate) {
         Calendar cal = Calendar.getInstance();
@@ -1164,13 +1156,13 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la prochaine date suivant la date donn�e en param�tre qui est un jour ouvrable �
-     * l'�tat de Gen�ve. Si la date donn�e en param�tre est un jour ouvrable, c'est cette m�me date qui est
-     * retourn�e.
+     * Cette méthode retourne la prochaine date suivant la date donnée en paramètre qui est un jour ouvrable à
+     * l'État de Genàve. Si la date donnée en paramètre est un jour ouvrable, c'est cette màme date qui est
+     * retournàe.
      *
-     * @param pDate La date � partir de laquelle on veut le prochain jour ouvrable (pour l'�tat)
+     * @param pDate La date à partir de laquelle on veut le prochain jour ouvrable (pour l'État)
      *
-     * @return La date suivant la date donn�e en param�tre qui est ouvrable.
+     * @return La date suivant la date donnée en paramètre qui est ouvrable.
      */
     public static Date getProchainJourEtatOuvrable(final Date pDate) {
         Calendar cal = Calendar.getInstance();
@@ -1184,14 +1176,14 @@ public final class Ferie {
     }
 
     /**
-     * Cette m�thode retourne la prochaine date suivant la date donn�e en param�tre qui est un jour ouvrable �
-     * l'�tat de Gen�ve. Si la date donn�e en param�tre est un jour ouvrable, c'est cette m�me date qui est
-     * retourn�e.
+     * Cette méthode retourne la prochaine date suivant la date donnée en paramètre qui est un jour ouvrable à
+     * l'État de Genàve. Si la date donnée en paramètre est un jour ouvrable, c'est cette màme date qui est
+     * retournàe.
      *
-     * @param pDTDDate Un entier : la date au format DTD (yyyyMMdd) � partir de laquelle on veut le prochain jour
-     *                 ouvrable (pour l'�tat)
+     * @param pDTDDate Un entier : la date au format DTD (yyyyMMdd) à partir de laquelle on veut le prochain jour
+     *                 ouvrable (pour l'État)
      *
-     * @return La date au format DTD (yyyyMMdd) suivant la date donn�e en param�tre qui est ouvrable.
+     * @return La date au format DTD (yyyyMMdd) suivant la date donnée en paramètre qui est ouvrable.
      */
     public static int getProchainJourEtatOuvrable(final int pDTDDate) {
         Calendar cal = Calendar.getInstance();
@@ -1199,9 +1191,9 @@ public final class Ferie {
     }
 
     /**
-     * Fixe l'heure du calendrier pass� en param�tre � midi.
+     * Fixe l'heure du calendrier passà en paramètre à midi.
      *
-     * @param pCal Le calendrier dont l'heure doit �tre fix�e � midi.
+     * @param pCal Le calendrier dont l'heure doit être fixàe à midi.
      */
     private static void setDefaultTime(Calendar pCal) {
         pCal.set(Calendar.HOUR_OF_DAY, HEURE_DEFAUT);
@@ -1230,7 +1222,7 @@ public final class Ferie {
      * @param pCal     Une instance de Calendar
      * @param pDTDDate Un entier : la date au format DTD
      *
-     * @return Une date au sens Java. L'heure est fix�e � 12h00.
+     * @return Une date au sens Java. L'heure est fixàe à 12h00.
      */
     private static Date convert(Calendar pCal, int pDTDDate) {
         int jour, mois, annee;
@@ -1244,7 +1236,7 @@ public final class Ferie {
     }
 
     /**
-     * Permet de d�finir le lecteur des param�tres
+     * Permet de définir le lecteur des paramètres
      *
      * @param lecteur
      */

@@ -10,7 +10,8 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
- * Cette classe permet la lecture du Distribution.properties afin d'y trouver les dâtes des jours états fermés
+ * Cette classe permet la lecture du Distribution.properties afin d'y trouver les dates des jours fermÃ©s
+ * Ã  l'Ã‰tat.
  *
  * @author pinaudj
  */
@@ -21,14 +22,15 @@ public final class LectureConfig implements ParamFermesAble {
     private static final Logger LOG = Logger.getLogger(LectureConfig.class);
 
     /**
-     * Constructeur par défaut Trouve et lit le Distribution.properties
+     * Constructeur par dÃ©faut.
+     * Trouve et lit le Distribution.properties
      */
     public LectureConfig() {
         String base = System.getProperty("jonas.base");
         File file = null;
         prop = new Properties();
 
-        // si pas de jonas.base dans les propriétés système on cherche distribution.properties
+        // si pas de jonas.base dans les propriÃ©tÃ©s systÃ¨me on cherche distribution.properties
         if (base == null || base.equals("")) {
             base = System.getProperty("distribution.properties");
             if (base != null) {
@@ -48,7 +50,7 @@ public final class LectureConfig implements ParamFermesAble {
             is = new FileInputStream(file);
             prop.load(is);
         } catch (FileNotFoundException e) {
-            LOG.error("fichier Distribution.properties non trouvé", e);
+            LOG.error("fichier Distribution.properties non trouvÃ©", e);
         } catch (IOException e) {
             LOG.error("erreur lecture fichier Distribution.properties", e);
         } finally {
@@ -61,16 +63,12 @@ public final class LectureConfig implements ParamFermesAble {
     }
 
     /**
-     * Retourne la liste des jours états fermés pour une année données
-     *
-     * @param annee
-     *
-     * @return
+     * Retourne la liste des jours fermÃ©s Ã  l'Ã‰tat, pour une annÃ©e donnÃ©e.
      */
     public String[] getJoursFermes(int annee) {
         String[] tab = new String[0];
 
-        // obtention des valeurs pour l'année donnée
+        // obtention des valeurs pour l'annÃ©e donnÃ©e
         String valeurs = prop.getProperty("JOURS_FERMETURE_ETAT_" + Integer.toString(annee));
 
         //parsing
@@ -80,4 +78,5 @@ public final class LectureConfig implements ParamFermesAble {
 
         return tab;
     }
+
 }

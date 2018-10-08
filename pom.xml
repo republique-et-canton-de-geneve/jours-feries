@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -14,7 +14,7 @@
     <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <description>Application fournissant les jours feries a l'Etat de Geneve</description>
+    <description>Application fournissant les jours fériés à l'État de Genève</description>
 
     <organization>
         <name>DGSIN</name>
@@ -28,7 +28,8 @@
 
     <scm>
         <connection>scm:git:https://***REMOVED***/Communs/jours-feries.git</connection>
-        <developerConnection>scm:git:https://***REMOVED***/Communs/jours-feries.git
+        <developerConnection>
+            scm:git:https://***REMOVED***/Communs/jours-feries.git
         </developerConnection>
         <url>https://***REMOVED***/Communs/jours-feries.git</url>
     </scm>
@@ -43,7 +44,7 @@
 
     <ciManagement>
         <system>jenkins</system>
-        <url>https://***REMOVED***/view/Composants m�tier communs/job/jours-feries</url>
+        <url>https://***REMOVED***/view/Composants métier communs/job/jours-feries</url>
     </ciManagement>
 
     <build>
