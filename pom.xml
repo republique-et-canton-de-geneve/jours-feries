@@ -33,20 +33,17 @@
         <url>https://***REMOVED***/Communs/jours-feries.git</url>
     </scm>
 
+    <properties>
+        <!-- versions des plugins -->
+        <javacoco-maven-plugin.version>0.8.2</javacoco-maven-plugin.version>
+
+        <!-- versions des JAR -->
+        <assertj.version>3.11.1</assertj.version>
+    </properties>
+
     <ciManagement>
         <system>jenkins</system>
         <url>https://***REMOVED***/view/Composants métier communs/job/jours-feries</url>
-        <notifiers>
-            <notifier>
-                <type/>
-                <sendOnError/>
-                <sendOnFailure/>
-                <sendOnSuccess/>
-                <sendOnWarning/>
-                <address/>
-                <configuration/>
-            </notifier>
-        </notifiers>
     </ciManagement>
 
     <build>
@@ -58,6 +55,31 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <!-- Couverture de code par les tests unitaires, pour SonarQube -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${javacoco-maven-plugin.version}</version>
+                <configuration>
+                    <append>true</append>
+                    <destFile>target/jacoco.exec</destFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>agent-for-unit-tests</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
