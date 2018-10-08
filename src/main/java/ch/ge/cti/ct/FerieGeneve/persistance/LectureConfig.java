@@ -45,20 +45,12 @@ public final class LectureConfig implements ParamFermesAble {
         }
 
         // remplissage du Properties
-        InputStream is = null;
-        try {
-            is = new FileInputStream(file);
+        try (InputStream is = new FileInputStream(file)) {
             prop.load(is);
         } catch (FileNotFoundException e) {
             LOG.error("fichier Distribution.properties non trouvé", e);
         } catch (IOException e) {
             LOG.error("erreur lecture fichier Distribution.properties", e);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                LOG.error("erreur fermeture fichier Distribution.properties", e);
-            }
         }
     }
 

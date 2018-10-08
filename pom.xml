@@ -21,11 +21,6 @@
         <url>http://www.ge.ch/dgsi</url>
     </organization>
 
-    <issueManagement>
-        <system>JIRA</system>
-        <url>https://***REMOVED***</url>
-    </issueManagement>
-
     <scm>
         <connection>scm:git:https://***REMOVED***/Communs/jours-feries.git</connection>
         <developerConnection>
@@ -33,6 +28,16 @@
         </developerConnection>
         <url>https://***REMOVED***/Communs/jours-feries.git</url>
     </scm>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://***REMOVED***</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>jenkins</system>
+        <url>https://***REMOVED***/view/Composants métier communs/job/jours-feries</url>
+    </ciManagement>
 
     <properties>
         <!-- versions des plugins -->
@@ -42,10 +47,14 @@
         <assertj.version>3.11.1</assertj.version>
     </properties>
 
-    <ciManagement>
-        <system>jenkins</system>
-        <url>https://***REMOVED***/view/Composants métier communs/job/jours-feries</url>
-    </ciManagement>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -85,12 +94,4 @@
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.4</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

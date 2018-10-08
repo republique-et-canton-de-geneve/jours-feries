@@ -130,7 +130,7 @@ public final class Ferie {
     // permet de lire les données concernant le paramètrage des jours fermés
     private static ParamFermesAble lecteurParam;
 
-    private static Map<Integer, String[]> joursFermetureEtat = new HashMap<Integer, String[]>();
+    private static Map<Integer, String[]> joursFermetureEtat = new HashMap<>();
 
     /**
      * Lecteur de paramètres par défaut.
@@ -333,7 +333,7 @@ public final class Ferie {
 
     /**
      * Cette méthode permet d'obtenir la date d'un jour férié pour une année donnée. Par exemple, pour obtenir
-     * la date du jeudi de l'ascension de l'année 2003, on appelera <code>getJourFerie(UtiFerie.ASCENSION,2003)
+     * la date du jeudi de l'Ascension de l'année 2003, on appelera <code>getJourFerie(UtiFerie.ASCENSION,2003)
      * </code>.
      *
      * @param pJourFerie Une des constantes <code>NOUVEL_AN, VENDREDI_SAINT, LUNDI_PAQUES, ASCENSION, LUNDI_PENTECOTE,
@@ -411,7 +411,7 @@ public final class Ferie {
 
     /**
      * Cette méthode permet d'obtenir la date d'un jour férié pour une année donnée. Par exemple, pour obtenir
-     * la date du jeudi de l'ascension de l'année 2003, on appelera <code>getJourDTDFerie(UtiFerie.ASCENSION,2003)
+     * la date du jeudi de l'Ascension de l'année 2003, on appelera <code>getJourDTDFerie(UtiFerie.ASCENSION,2003)
      * </code>.
      *
      * @param pJourFerie Une des constantes <code>NOUVEL_AN, VENDREDI_SAINT, LUNDI_PAQUES, ASCENSION, LUNDI_PENTECOTE,
@@ -447,7 +447,7 @@ public final class Ferie {
         int dimanche = (5 * pAnnee) / 4 - pasBisextile - 10;
 
         // Epacte (date de la pleine lune)
-        int epacte = (((11 * nombreOr) + 20 + synchroLune - pasBisextile)) % 30;
+        int epacte = ((11 * nombreOr) + 20 + synchroLune - pasBisextile) % 30;
         if ((epacte == 25 && nombreOr > 11) || (epacte == 24)) {
             epacte++;
         }
@@ -542,7 +542,7 @@ public final class Ferie {
         // Lundi de Pâques
         cal.add(Calendar.DATE, ECART_LUNDI_PAQUES - ECART_VENDREDI_SAINT_PAQUES);
         dates[LUNDI_PAQUES] = cal.getTime();
-        // Jeudi de l'ascension
+        // Jeudi de l'Ascension
         cal.add(Calendar.DATE, ECART_ASCENSION_PAQUES - ECART_LUNDI_PAQUES);
         dates[ASCENSION] = cal.getTime();
         // Lundi de Pentecôte
@@ -657,10 +657,8 @@ public final class Ferie {
             // aprés 2011 les dates de fermetures sont paramàtràes
             if (pAnnee >= ANNEE_PARAM) {
                 List<Date> joursFermes = getJoursFermesParConseilEtat(pAnnee, pMois);
-                if (dates != null) {
-                    joursFermes.addAll(Arrays.asList(dates));
-                }
-                dates = (Date[]) joursFermes.toArray(new Date[joursFermes.size()]);
+                joursFermes.addAll(Arrays.asList(dates));
+                dates = joursFermes.toArray(new Date[joursFermes.size()]);
             }
 
             return dates;
@@ -672,7 +670,7 @@ public final class Ferie {
     }
 
     private static List<Date> getJoursFermesParConseilEtat(int pAnnee, int pMois) {
-        String[] tabJoursFermes = (String[]) joursFermetureEtat.get(Integer.valueOf(pAnnee));
+        String[] tabJoursFermes = joursFermetureEtat.get(Integer.valueOf(pAnnee));
         if (tabJoursFermes == null) {
             //LECTURE des joursFermes format dd/MM/yyyy
             tabJoursFermes = lecteurParam.getJoursFermes(pAnnee);
@@ -680,7 +678,7 @@ public final class Ferie {
         }
 
         Calendar cal = Calendar.getInstance();
-        List<Date> listeJoursFermes = new ArrayList<Date>();
+        List<Date> listeJoursFermes = new ArrayList<>();
         for (int i = 0; i < tabJoursFermes.length; i++) {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             try {
@@ -741,7 +739,10 @@ public final class Ferie {
         if (pAnnee > -1 && pAnnee < ANNEE_MAX && pMois > -1 && pMois < NBR_MOIS) {
             Calendar cal;
             int index;
-            Date vendrediSaint, lundiPaques, ascension, lundiPentecote;
+            Date vendrediSaint;
+            Date lundiPaques;
+            Date Ascension;
+            Date lundiPentecote;
             switch (pMois) {
             case Calendar.JANUARY:
                 // Il n'y a qu'un jour férié au mois de janvier : le nouvel an
@@ -757,33 +758,24 @@ public final class Ferie {
                 lundiPaques = null;
                 cal.setTime(vendrediSaint);
                 if (Calendar.MARCH == cal.get(Calendar.MONTH)) {
-                    // Cas oà le vendredi saint est en mars
+                    // Cas où le vendredi saint est en mars
                     index = 1;
                     lundiPaques = getJourFerie(LUNDI_PAQUES, pAnnee);
                     cal.setTime(lundiPaques);
                     if (Calendar.MARCH == cal.get(Calendar.MONTH)) {
-                        // Cas oà le lundi de Pâques est aussi en mars
+                        // Cas où le lundi de Pâques est aussi en mars
                         index = 2;
                     }
                 }
-                switch (index) {
-                case 0:
+                if (index == 0) {
                     dates = new Date[0];
-                    break;
-
-                case 1:
+                } else if (index == 1) {
                     dates = new Date[1];
                     dates[0] = vendrediSaint;
-                    break;
-
-                case 2:
+                } else if (index == 2) {
                     dates = new Date[2];
                     dates[0] = vendrediSaint;
                     dates[1] = lundiPaques;
-                    break;
-
-                default:
-                    break;
                 }
                 break;
 
@@ -792,11 +784,11 @@ public final class Ferie {
                 index = 0;
                 vendrediSaint = getJourFerie(VENDREDI_SAINT, pAnnee);
                 lundiPaques = getJourFerie(LUNDI_PAQUES, pAnnee);
-                ascension = null;
+                Ascension = null;
                 lundiPentecote = null;
                 cal.setTime(vendrediSaint);
                 if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
-                    // Cas oà le vendredi saint est au mois d'avril. Dans ce cas, l'Ascension et le lundi
+                    // Cas où le vendredi saint est au mois d'avril. Dans ce cas, l'Ascension et le lundi
                     // de Pentecôte ne peuvent pas être au mois d'avril.
                     // Par contre, forcément, le lundi de Pâques est aussi au mois d'avril.
                     index = 1;
@@ -804,21 +796,21 @@ public final class Ferie {
                     // Le vendredi saint est au mois de mars
                     cal.setTime(lundiPaques);
                     if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
-                        // Cas oà le lundi de Pâques est au mois d'avril
+                        // Cas où le lundi de Pâques est au mois d'avril
                         index = 2;
                     } else {
-                        // Cas oà le lundi de Pâques est au mois de mars
+                        // Cas où le lundi de Pâques est au mois de mars
                         lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
                         cal.setTime(lundiPentecote);
                         if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
-                            // Cas oà le lundi de Pentecôte est au mois d'avril
-                            // Forcàment, l'ascension est aussi au mois d'avril
+                            // Cas où le lundi de Pentecôte est au mois d'avril
+                            // Forcément, l'Ascension est aussi au mois d'avril
                             index = 4;
                         } else {
                             // Si le lundi de Pentecôte n'est pas au mois d'avril,
-                            // l'ascension peut tout de màme être au mois d'avril
-                            ascension = getJourFerie(ASCENSION, pAnnee);
-                            cal.setTime(ascension);
+                            // l'Ascension peut tout de même être au mois d'avril
+                            Ascension = getJourFerie(ASCENSION, pAnnee);
+                            cal.setTime(Ascension);
                             if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
                                 index = 3;
                             }
@@ -826,122 +818,89 @@ public final class Ferie {
                         }
                     }
                 }
-                switch (index) {
-                case 0:
+                if (index == 0) {
                     dates = new Date[0];
-                    break;
-
-                case 1:
+                } else if (index == 1) {
                     dates = new Date[2];
                     dates[0] = vendrediSaint;
                     dates[1] = lundiPaques;
-                    break;
-
-                case 2:
+                } else if (index == 2) {
                     dates = new Date[1];
                     dates[0] = lundiPaques;
-                    break;
-
-                case 3:
+                } else if (index == 3) {
                     dates = new Date[1];
-                    dates[0] = ascension;
-                    break;
-
-                case 4:
+                    dates[0] = Ascension;
+                } else if (index == 4) {
                     dates = new Date[2];
-                    dates[0] = ascension;
+                    dates[0] = Ascension;
                     dates[1] = lundiPentecote;
-                    break;
-
-                default:
-                    break;
                 }
                 break;
 
             case Calendar.MAY:
-                // Au mois de mai, il peut y avoir l'ascension et le lundi de Pentecôte
+                // Au mois de mai, il peut y avoir l'Ascension et le lundi de Pentecôte
                 cal = Calendar.getInstance();
                 index = 0;
-                ascension = getJourFerie(ASCENSION, pAnnee);
+                Ascension = getJourFerie(ASCENSION, pAnnee);
                 lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
-                cal.setTime(ascension);
+                cal.setTime(Ascension);
                 if (Calendar.MAY == cal.get(Calendar.MONTH)) {
-                    // Cas oà l'ascension est au mois de mai
+                    // Cas où l'Ascension est au mois de mai
                     index = 1;
                     cal.setTime(lundiPentecote);
                     if (Calendar.MAY == cal.get(Calendar.MONTH)) {
-                        // Cas oà l'ascension et le lundi de Pentecôte sont au mois de mai.
+                        // Cas où l'Ascension et le lundi de Pentecôte sont au mois de mai.
                         index = 3;
                     }
                 } else {
                     cal.setTime(lundiPentecote);
                     if (Calendar.MAY == cal.get(Calendar.MONTH)) {
-                        // Cas oà l'ascension est au mois d'avril et le lundi de Pentecôte au mois de mai.
+                        // Cas où l'Ascension est au mois d'avril et le lundi de Pentecôte au mois de mai.
                         index = 2;
                     }
                 }
-                switch (index) {
-                case 0:
+                if (index == 0) {
                     dates = new Date[0];
-                    break;
-
-                case 1:
+                } else if (index == 1) {
                     dates = new Date[1];
-                    dates[0] = ascension;
-                    break;
-
-                case 2:
+                    dates[0] = Ascension;
+                } else if (index == 2) {
                     dates = new Date[1];
                     dates[0] = lundiPentecote;
-                    break;
-
-                case 3:
+                } else if (index == 3) {
                     dates = new Date[2];
-                    dates[0] = ascension;
+                    dates[0] = Ascension;
                     dates[1] = lundiPentecote;
-                    break;
-
-                default:
-                    break;
                 }
                 break;
 
             case Calendar.JUNE:
-                // Il est possible d'avoir l'ascension et le lundi de Pentecôte au mois de juin
+                // Il est possible d'avoir l'Ascension et le lundi de Pentecôte au mois de juin
                 cal = Calendar.getInstance();
                 index = 0;
-                ascension = getJourFerie(ASCENSION, pAnnee);
+                Ascension = getJourFerie(ASCENSION, pAnnee);
                 lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
-                cal.setTime(ascension);
+                cal.setTime(Ascension);
                 if (Calendar.JUNE == cal.get(Calendar.MONTH)) {
-                    // Cas oà l'ascension est au mois de juin, alors forcément le lundi de Pentecôte
+                    // Cas où l'Ascension est au mois de juin, alors forcément le lundi de Pentecôte
                     // est aussi au mois de juin
                     index = 1;
                 } else {
                     cal.setTime(lundiPentecote);
                     if (Calendar.JUNE == cal.get(Calendar.MONTH)) {
-                        // Cas oà l'ascension est au mois de mai et le lundi de Pentecôte au mois de juin
+                        // Cas où l'Ascension est au mois de mai et le lundi de Pentecôte au mois de juin
                         index = 2;
                     }
                 }
-                switch (index) {
-                case 0:
+                if (index == 0) {
                     dates = new Date[0];
-                    break;
-
-                case 1:
+                } else if (index == 1) {
                     dates = new Date[2];
-                    dates[0] = ascension;
+                    dates[0] = Ascension;
                     dates[1] = lundiPentecote;
-                    break;
-
-                case 2:
+                } else if (index == 2) {
                     dates = new Date[1];
                     dates[0] = lundiPentecote;
-                    break;
-
-                default:
-                    break;
                 }
                 break;
 
@@ -990,12 +949,15 @@ public final class Ferie {
      */
     public static int[] getJoursDTDFeriesDuMois(int pAnnee, int pMois) {
         Calendar cal = Calendar.getInstance();
+        int[] datesDTD = new int[0];
         // On cherche les dates au format jav du mois pMois
         Date[] dates = getJoursFeriesDuMois(pAnnee, pMois);
-        int[] datesDTD = new int[dates.length];
-        // On convertit les dates du format java au format DTD
-        for (int i = 0; i < dates.length; i++) {
-            datesDTD[i] = convert(cal, dates[i]);
+        if (dates != null) {
+            datesDTD = new int[dates.length];
+            // On convertit les dates du format java au format DTD
+            for (int i = 0; i < dates.length; i++) {
+                datesDTD[i] = convert(cal, dates[i]);
+            }
         }
         return datesDTD;
     }
@@ -1225,14 +1187,12 @@ public final class Ferie {
      * @return Une date au sens Java. L'heure est fixàe à 12h00.
      */
     private static Date convert(Calendar pCal, int pDTDDate) {
-        int jour, mois, annee;
-        jour = pDTDDate % CONV_MOIS_DTD;
+        int jour = pDTDDate % CONV_MOIS_DTD;
         int pDTDDateT = pDTDDate / CONV_MOIS_DTD;
-        mois = pDTDDateT % CONV_MOIS_DTD;
-        annee = pDTDDateT / CONV_SIECLE;
+        int mois = pDTDDateT % CONV_MOIS_DTD;
+        int annee = pDTDDateT / CONV_SIECLE;
         pCal.set(annee, mois - 1, jour, NBR_MOIS, 0, 0);
         return pCal.getTime();
-
     }
 
     /**
