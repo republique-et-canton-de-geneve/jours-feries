@@ -14,7 +14,6 @@
 	<groupId>ch.ge.cti.ct</groupId>
 	<artifactId>jours-feries</artifactId>
 	<version>1.0.3-SNAPSHOT</version>
-	<name>Jours feries Geneve</name>
 	<packaging>jar</packaging>
 
 	<description>Application fournissant les jours feries a l'Etat de Geneve</description>
@@ -51,7 +50,7 @@
 	<!-- Cette section sera utilisee ulterieurement avec l'integration continue -->
 
 	<ciManagement>
-		<system>hudson</system>
+		<system>jenkins</system>
 		<url>http://ic.etat-ge.ch:20200/hudson/job/ct-jourferie</url>
 		<notifiers>
 			<notifier>
