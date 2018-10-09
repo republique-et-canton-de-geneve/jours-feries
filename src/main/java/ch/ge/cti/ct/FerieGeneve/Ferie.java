@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import ch.ge.cti.ct.FerieGeneve.persistance.LectureConfig;
 import ch.ge.cti.ct.FerieGeneve.persistance.ParamFermesAble;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Cette classe utilitaire permet de connaître les jours fériés à l'État de Genève.
@@ -125,7 +125,7 @@ public final class Ferie {
 
     private static final int MAX_JOUR_PAQUE = 31;
 
-    private static final Logger LOG = Logger.getLogger(Ferie.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Ferie.class);
 
     // permet de lire les données concernant le paramètrage des jours fermés
     private static ParamFermesAble lecteurParam;

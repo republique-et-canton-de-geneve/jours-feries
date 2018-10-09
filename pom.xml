@@ -3,16 +3,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--
+        Ce projet n'utilise pas Spring. Il herite de spring-boot-dependencies uniquement pour simplifier la
+        gestion des versions des plugins et des dependances.
+      -->
     <parent>
-        <artifactId>pom_parent_projet</artifactId>
-        <groupId>ch.ge.cti.melusine</groupId>
-        <version>3.2.0</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>2.0.5.RELEASE</version>
     </parent>
 
     <groupId>ch.ge.cti.ct</groupId>
     <artifactId>jours-feries</artifactId>
     <version>1.0.3-SNAPSHOT</version>
-    <packaging>jar</packaging>
 
     <description>Application fournissant les jours fériés à l'État de Genève</description>
 
@@ -39,19 +42,41 @@
         <url>https://***REMOVED***/view/Composants métier communs/job/jours-feries</url>
     </ciManagement>
 
+    <distributionManagement>
+        <repository>
+            <id>internal.project.release</id>
+            <url>http://***REMOVED***/content/repositories/project_release</url>
+        </repository>
+        <snapshotRepository>
+            <id>internal.project.snapshot</id>
+            <url>http://***REMOVED***/content/repositories/project_snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <!-- versions des plugins -->
         <javacoco-maven-plugin.version>0.8.2</javacoco-maven-plugin.version>
 
         <!-- versions des JAR -->
+        <!--
         <assertj.version>3.11.1</assertj.version>
+        -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -59,9 +84,11 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <!--
+                    <encoding>UTF-8</encoding>
+                    -->
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>

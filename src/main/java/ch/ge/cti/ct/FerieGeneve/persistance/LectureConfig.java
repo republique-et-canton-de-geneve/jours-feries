@@ -6,8 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Cette classe permet la lecture du Distribution.properties afin d'y trouver les dates des jours fermés
@@ -19,7 +19,7 @@ public final class LectureConfig implements ParamFermesAble {
 
     private Properties prop;
 
-    private static final Logger LOG = Logger.getLogger(LectureConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LectureConfig.class);
 
     /**
      * Constructeur par défaut.
