@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.ge.cti.ct.FerieGeneve.persistance.LectureConfig;
-import ch.ge.cti.ct.FerieGeneve.persistance.ParamFermesAble;
+import ch.ge.cti.ct.FerieGeneve.persistance.FournisseurParametres;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,7 +128,7 @@ public final class Ferie {
     private static final Logger LOG = LoggerFactory.getLogger(Ferie.class);
 
     // permet de lire les données concernant le paramètrage des jours fermés
-    private static ParamFermesAble lecteurParam;
+    private static FournisseurParametres lecteurParam;
 
     private static Map<Integer, String[]> joursFermetureEtat = new HashMap<>();
 
@@ -1200,7 +1200,7 @@ public final class Ferie {
      *
      * @param lecteur
      */
-    public static void init(ParamFermesAble lecteur) {
+    public static void init(FournisseurParametres lecteur) {
         lecteurParam = lecteur;
     }
 }

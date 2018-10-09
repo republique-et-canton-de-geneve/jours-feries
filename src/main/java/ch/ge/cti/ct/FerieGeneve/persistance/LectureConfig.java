@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author pinaudj
  */
-public final class LectureConfig implements ParamFermesAble {
+public final class LectureConfig implements FournisseurParametres {
 
     private Properties prop;
 
@@ -30,7 +30,7 @@ public final class LectureConfig implements ParamFermesAble {
         File file = null;
         prop = new Properties();
 
-        // si pas de jonas.base dans les propriétés système on cherche distribution.properties
+        // si pas de jonas.base dans les propriétés système on cherche Distribution.properties
         if (base == null || base.equals("")) {
             base = System.getProperty("distribution.properties");
             if (base != null) {

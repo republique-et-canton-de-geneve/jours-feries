@@ -19,6 +19,8 @@
 
     <description>Application fournissant les jours fériés à l'État de Genève</description>
 
+    <url>https://prod.etat-ge.ch/wikiadm/display/ORGCSDEV/ct.outils.ws.jourFeries</url>
+
     <organization>
         <name>DGSIN</name>
         <url>http://www.ge.ch/dgsi</url>

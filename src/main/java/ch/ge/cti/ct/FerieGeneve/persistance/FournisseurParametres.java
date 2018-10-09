@@ -6,7 +6,7 @@ package ch.ge.cti.ct.FerieGeneve.persistance;
  * </p>
  * @author pinaudj
  */
-public interface ParamFermesAble {
+public interface FournisseurParametres {
 
     /**
      * Retourne la liste des jours fermés à l´État, pour une année donnée.
