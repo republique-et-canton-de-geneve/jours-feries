@@ -634,7 +634,7 @@ public final class Ferie {
                 break;
 
             case Calendar.AUGUST:
-                // Au mois d'aoàt, si le 1er aoàt tombe un dimanche, il est rattrapà le lundi suivant
+                // Au mois d'août, si le 1er août tombe un dimanche, il est rattrapé le lundi suivant
                 cal = Calendar.getInstance();
                 setDefaultTime(cal);
                 cal.set(pAnnee, Calendar.AUGUST, 1);
@@ -648,7 +648,7 @@ public final class Ferie {
                 break;
 
             case Calendar.DECEMBER:
-                // Au mois de décembre, les 24, 26, 27, 28, 29 et 30 décembre àtaient fermés avant 2011
+                // Au mois de décembre, les 24, 26, 27, 28, 29 et 30 décembre étaient fermés avant 2011
                 if (pAnnee < ANNEE_PARAM) {
                     cal = Calendar.getInstance();
                     setDefaultTime(cal);
@@ -672,7 +672,7 @@ public final class Ferie {
                 break;
             }
 
-            // aprés 2011 les dates de fermetures sont paramàtràes
+            // à partir de 2011 les dates de fermeture sont paramétrées
             if (pAnnee >= ANNEE_PARAM) {
                 List<Date> joursFermes = getJoursFermesParConseilEtat(pAnnee, pMois);
                 joursFermes.addAll(Arrays.asList(dates));
@@ -706,10 +706,8 @@ public final class Ferie {
                     listeJoursFermes.add(jourFerme);
                 }
             } catch (ParseException ex) {
-                LOG.error("erreur au niveau du formatage de la date reçue : " + tabJoursFermes[i]
+                LOG.error("erreur de formatage de la date reçue : " + tabJoursFermes[i]
                         + " attendue : dd/MM/yyyy", ex);
-                // sysout( "erreur au niveau du formatage de la date reçue : " + tabJoursFermes[i] + " attendue :
-                // dd/MM/yyyy")
             }
         }
 
@@ -730,7 +728,7 @@ public final class Ferie {
      */
     public static int[] getJoursDTDEtatFermesDuMois(int pAnnee, int pMois) {
         Calendar cal = Calendar.getInstance();
-        // On cherche les dates au format jav du mois pMois
+        // On cherche les dates au format java du mois pMois
         Date[] dates = getJoursEtatFermesDuMois(pAnnee, pMois);
         int[] datesDTD = new int[dates.length];
         // On convertit les dates du format java au format DTD
@@ -763,13 +761,13 @@ public final class Ferie {
             Date lundiPentecote;
             switch (pMois) {
             case Calendar.JANUARY:
-                // Il n'y a qu'un jour férié au mois de janvier : le nouvel an
+                // Il n'y a qu'un jour férié au mois de janvier : le Nouvel an
                 dates = new Date[1];
                 dates[0] = getJourFerie(NOUVEL_AN, pAnnee);
                 break;
 
             case Calendar.MARCH:
-                // Au mois de mars, il peut y avoir le vendredi saint et le lundi de Pâques
+                // Au mois de mars, il peut y avoir le Vendredi-saint et le lundi de Pâques
                 cal = Calendar.getInstance();
                 index = 0;
                 vendrediSaint = getJourFerie(VENDREDI_SAINT, pAnnee);
@@ -806,7 +804,7 @@ public final class Ferie {
                 lundiPentecote = null;
                 cal.setTime(vendrediSaint);
                 if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
-                    // Cas où le vendredi saint est au mois d'avril. Dans ce cas, l'Ascension et le lundi
+                    // Cas où le Vendredi-saint est au mois d'avril. Dans ce cas, l'Ascension et le lundi
                     // de Pentecôte ne peuvent pas être au mois d'avril.
                     // Par contre, forcément, le lundi de Pâques est aussi au mois d'avril.
                     index = 1;
@@ -832,7 +830,6 @@ public final class Ferie {
                             if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
                                 index = 3;
                             }
-
                         }
                     }
                 }
@@ -935,7 +932,7 @@ public final class Ferie {
                 break;
 
             case Calendar.DECEMBER:
-                // 2 jours fériés : Noàl et le 31 décembre (Restauration de la Ràpublique)
+                // 2 jours fériés : Noël et le 31 décembre (Restauration de la République)
                 dates = new Date[2];
                 dates[0] = getJourFerie(NOEL, pAnnee);
                 dates[1] = getJourFerie(RESTAURATION_REPUBLIQUE, pAnnee);
@@ -1048,7 +1045,7 @@ public final class Ferie {
      * addJoursOuvrables(pDate,6) doit retourner le 2 janvier 2005.
      *
      * @param pDate               La date à laquelle on veut ajouter des jours ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter ou soustraire..
+     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter ou soustraire
      *
      * @return pDate augmentàe de pNbreJoursOuvrables
      */

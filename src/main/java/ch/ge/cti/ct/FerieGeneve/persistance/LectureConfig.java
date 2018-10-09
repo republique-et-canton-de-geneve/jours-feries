@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Cette classe permet la lecture du Distribution.properties afin d'y trouver les dates des jours fermés
+ * Cette classe permet la lecture du fichier jours-feries.properties afin d'y trouver les dates des jours fermés
  * à l'État.
  *
  * @author pinaudj
@@ -41,34 +41,27 @@ public final class LectureConfig implements FournisseurParametres {
 
     /**
      * Constructeur par défaut.
-     * Trouve et lit le Distribution.properties
+     * Trouve et lit le fichier jours-feries.properties
      */
     public LectureConfig() {
-        String base = System.getProperty("jonas.base");
-        File file = null;
+        File file;
         prop = new Properties();
 
-        // si pas de jonas.base dans les propriétés système on cherche Distribution.properties
-        if (base == null || base.equals("")) {
-            base = System.getProperty("distribution.properties");
-            if (base != null) {
-                file = new File(base);
-            } else {
-                return;
-            }
-        }
-        // sinon on charge le fichier
-        else {
-            file = new File(base + "/Distribution.properties");
+        String filePath = System.getProperty("jours-feries.config.file");
+        if (filePath != null) {
+            file = new File(filePath);
+        } else {
+            LOG.error("Pas de fichier des jours fermés fourni");
+            return;
         }
 
         // remplissage du Properties
         try (InputStream is = new FileInputStream(file)) {
             prop.load(is);
         } catch (FileNotFoundException e) {
-            LOG.error("fichier Distribution.properties non trouvé", e);
+            LOG.error("Fichier [{}] pas trouvé", file, e);
         } catch (IOException e) {
-            LOG.error("erreur lecture fichier Distribution.properties", e);
+            LOG.error("Erreur lors de la lecture du fichier [{}]", file, e);
         }
     }
 

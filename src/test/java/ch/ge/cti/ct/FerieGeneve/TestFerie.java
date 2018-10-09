@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
 import junit.framework.TestCase;
 
 public class TestFerie extends TestCase {
@@ -32,9 +31,8 @@ public class TestFerie extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        System.setProperty("distribution.properties",
-                this.getClass().getResource("/Distribution.properties").getFile());
-        super.setUp();
+        System.setProperty("jours-feries.config.file",
+                getClass().getResource("/jours-feries.properties").getFile());
     }
 
     public void testJourEtat() {
