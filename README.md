@@ -4,7 +4,7 @@ La bibliothèque jours-feries fournit la liste des jours fériés et des jours f
 
 # 2. Description
 
-La classe utilitaire ``Feries`` permet de connaître les jours fériés et fermés à l'État de Genève.
+La classe ``JoursFeriesService`` permet de connaître les jours fériés et fermés à l'État de Genève.
 
 Jours fériés légaux :
 - Nouvel An : le 1er janvier
@@ -44,10 +44,22 @@ La bibliothèque peut être assemblée via Maven par la commande
 
 # 4. Exécution
 
-Le fichier .jar créé ci-dessus peut ensuite être intégré à toute application Java 1.7+.
+Le fichier .jar créé ci-dessus peut ensuite être intégré à toute application Java 8+.
 
 Lors de l'exécution, il faut fournir le fichier contenant les jours fermés, au moyen d'une variable de la JVM 
 ``jours-feries.config.file``. Par exemple :
-```-Djours-feries.config.file=C:\tmp\jours-feries.properties```
+```
+-Djours-feries.config.file=C:\tmp\jours-feries.properties
+```
 
-Pour le format du fichier, voir l'exemple fourni dans les sources.
+Dans ce fichier, le format à respecter est :
+```
+JOURS_FERMETURE_ETAT_[ANNÉE]=dd/MM;dd/MM;dd/MM....
+```
+
+Par exemple :
+```
+JOURS_FERMETURE_ETAT_2017=26/12;27/12;28/12;29/12
+JOURS_FERMETURE_ETAT_2018=24/12;26/12;27/12;28/12
+```
+Le 1<sup>er</sup> mai n'a pas besoin de figurer dans ce fichier : il est automatiquement fourni comme jour fermé.

@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!--
-        Ce projet n'utilise pas Spring. Il herite de spring-boot-dependencies uniquement pour simplifier la
-        gestion des versions des plugins et des dependances.
+        Ce projet n'utilise pas Spring. Il hérite de spring-boot-dependencies uniquement pour simplifier la
+        gestion des versions des plugins et des dépendances.
       -->
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -15,11 +15,11 @@
 
     <groupId>ch.ge.cti.ct</groupId>
     <artifactId>jours-feries</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
 
     <description>Application fournissant les jours fériés à l'État de Genève</description>
 
-    <url>https://prod.etat-ge.ch/wikiadm/display/ORGCSDEV/ct.outils.ws.jourFeries</url>
+    <url>https://***REMOVED***</url>
 
     <organization>
         <name>DGSIN</name>
@@ -84,9 +84,21 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
+            </plugin>
+            <!-- Génération du fichier src.jar -->
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!-- Couverture de code par les tests unitaires, pour SonarQube -->
             <plugin>

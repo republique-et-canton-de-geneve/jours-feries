@@ -16,8 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.ge.cti.ct.FerieGeneve;
+package ch.ge.cti.ct.joursferies.service.impl;
 
+import static ch.ge.cti.ct.joursferies.service.JourFerie.ASCENSION;
+import static ch.ge.cti.ct.joursferies.service.JourFerie.FETE_NATIONALE;
+import static ch.ge.cti.ct.joursferies.service.JourFerie.JEUNE_GENEVOIS;
+import static ch.ge.cti.ct.joursferies.service.JourFerie.NOEL;
+import static ch.ge.cti.ct.joursferies.service.JourFerie.NOUVEL_AN;
+import static ch.ge.cti.ct.joursferies.service.JourFerie.LUNDI_DE_PAQUES;
+import static ch.ge.cti.ct.joursferies.service.JourFerie.LUNDI_DE_PENTECOTE;
+import static ch.ge.cti.ct.joursferies.service.JourFerie.RESTAURATION_DE_LA_REPUBLIQUE;
+import static ch.ge.cti.ct.joursferies.service.JourFerie.VENDREDI_SAINT;
+
+import ch.ge.cti.ct.joursferies.persistance.FournisseurParametres;
+import ch.ge.cti.ct.joursferies.service.JourFerie;
+import ch.ge.cti.ct.joursferies.service.JoursFeriesService;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,90 +40,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ch.ge.cti.ct.FerieGeneve.persistance.LectureConfig;
-import ch.ge.cti.ct.FerieGeneve.persistance.FournisseurParametres;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Cette classe utilitaire permet de connaître les jours fériés à l'État de Genève.
- * Les jours fériés officiels sont :
- * <ul>
- * <li>nouvel an <i>1<sup>er</sup> janvier</i>,</li>
- * <li>Vendredi-saint <i>2 jours avant Pâques</i>,</li>
- * <li>lundi de Pâques <i>1 jour après Pâques</i>,</li>
- * <li>jeudi de l'Ascension <i>39 jours après Pâques</i>,</li>
- * <li>lundi de Pentecôte <i>50 jours après Pâques</i>,</li>
- * <li>fête nationale <i>1<sup>er</sup> août</i>,</li>
- * <li>jeûne genevois <i>jeudi qui suit le premier dimanche de septembre</i>,</li>
- * <li>Noël <i>25 décembre</i>,</li>
- * <li>Restauration de la République <i>31 décembre</i></li>
- * </ul>
- * En plus, à l'État, il y a des jours fermés : le 1er mai, le lundi suivant le 1er août si celui-ci tombe un
- * dimanche et les 24, 26, 27, 28, 29 et 30 décembre. Les méthodes incluant ces jours fériés supplémentaires
- * contiennent le mot "Etat" dans leur nom (getJoursEtatFermesDuMois(), isJourEtatFerie(), ....).
- * <br>
- * Les jours ouvrables sont les jours qui ne sont pas fériés, qui ne sont pas samedi ni dimanche. De nouveau, on a
- * la notion de jour ouvrable général et de jour ouvrable à l'État de Genève (méthodes isJourOuvrable() et
- * isJourEtatOuvrable()).
- * <br>
- * Les méthodes existent en 2 exemplaires. Le premier avec des dates aux formats java.util.Date et le second avec des
- * dates au format DTD, par exemple yyyyMMdd.
- * <br>
- * Deux méthodes auxiliaires testent si la date est un samedi ou un dimanche.
- *
- * @author <a href="mailto:patrick.giroud@etat.ge.ch">Patrick Giroud</a>
- */
-public final class Ferie {
-
-    /**
-     * Le premier jour de l'année : 1<sup>er</sup> janvier.
-     */
-    public static final int NOUVEL_AN = 0;
-
-    /**
-     * Vendredi-saint : 2 jours avant Pâques.
-     */
-    public static final int VENDREDI_SAINT = 1;
-
-    /**
-     * Le lendemain de Pâques-
-     */
-    public static final int LUNDI_PAQUES = 2;
-
-    /**
-     * Le jeudi de l'Ascension.
-     */
-    public static final int ASCENSION = 3;
-
-    /**
-     * Lendemain de Pentecôte.
-     */
-    public static final int LUNDI_PENTECOTE = 4;
-
-    /**
-     * Fête nationale suisse : commémore un traité d'alliance passé au début du mois d'août 1291 entre "les
-     * hommes de la vallée d'Uri, la communauté de Schwytz et celle des hommes de la vallée inférieure
-     * d'Unterwald".
-     */
-    public static final int FETE_NATIONALE = 5;
-
-    /**
-     * Jeûne genevois.
-     */
-    public static final int JEUNE_GENEVOIS = 6;
-
-    /**
-     * Noël.
-     */
-    public static final int NOEL = 7;
-
-    /**
-     * Restauration de la République du 31 décembre 1813 (fin de l'annexion de la République de Genève à la
-     * France).
-     */
-    public static final int RESTAURATION_REPUBLIQUE = 8;
+public final class JoursFeriesServiceImpl implements JoursFeriesService {
 
     private static final int ECART_VENDREDI_SAINT_PAQUES = -2;
 
@@ -143,82 +78,57 @@ public final class Ferie {
 
     private static final int MAX_JOUR_PAQUE = 31;
 
-    private static final Logger LOG = LoggerFactory.getLogger(Ferie.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JoursFeriesServiceImpl.class);
 
-    // permet de lire les données concernant le paramètrage des jours fermés
-    private static FournisseurParametres lecteurParam;
+    /**
+     * Permet de lire les données concernant le paramétrage des jours fermés.
+     */
+    @Resource
+    private FournisseurParametres fournisseurParametres;
 
     private static Map<Integer, String[]> joursFermetureEtat = new HashMap<>();
 
-    /**
-     * Lecteur de paramètres par défaut.
-     */
-    static {
-        lecteurParam = new LectureConfig();
+    public JoursFeriesServiceImpl() {
+        this.fournisseurParametres = fournisseurParametres;
     }
 
-    /**
-     * On n'instancie pas cette classe.
-     */
-    protected Ferie() {
+    public void setFournisseurParametres(FournisseurParametres fournisseurParametres) {
+        this.fournisseurParametres = fournisseurParametres;
     }
 
-    /**
-     * Cette méthode teste si la date fournie en paramètre est un samedi.
-     * @param pDate La date à tester
-     * @return true si la date est un samedi
-     */
-    public static boolean isSamedi(Date pDate) {
+    @Override
+    public boolean isSamedi(Date pDate) {
+        DateValidator.checkValidite(pDate);
         Calendar cal = Calendar.getInstance();
         cal.setTime(pDate);
         return Calendar.SATURDAY == cal.get(Calendar.DAY_OF_WEEK);
     }
 
-    /**
-     * Cette méthode teste si la date fournie en paramètre est un samedi
-     *
-     * @param pDTDDate Un entier : la date à tester au format DTD (yyyyMMdd)
-     *
-     * @return true si la date est un samedi
-     */
-    public static boolean isSamedi(int pDTDDate) {
+    @Override
+    public boolean isSamedi(int pDTDDate) {
+        DateValidator.checkValidite(Integer.toString(pDTDDate), "yyyyMMdd");
         Calendar cal = Calendar.getInstance();
         return isSamedi(convert(cal, pDTDDate));
     }
 
-    /**
-     * Cette méthode teste si la date fournie en paramètre est un dimanche
-     *
-     * @param pDate La date à tester
-     *
-     * @return true si la date est un dimanche
-     */
-    public static boolean isDimanche(Date pDate) {
+    @Override
+    public boolean isDimanche(Date pDate) {
+        DateValidator.checkValidite(pDate);
         Calendar cal = Calendar.getInstance();
         cal.setTime(pDate);
         return Calendar.SUNDAY == cal.get(Calendar.DAY_OF_WEEK);
     }
 
-    /**
-     * Cette méthode teste si la date fournie en paramètre est un dimanche
-     *
-     * @param pDTDDate Un entier : la date à tester au format DTD (yyyyMMdd)
-     *
-     * @return true si la date est un dimanche
-     */
-    public static boolean isDimanche(int pDTDDate) {
+    @Override
+    public boolean isDimanche(int pDTDDate) {
+        DateValidator.checkValidite(Integer.toString(pDTDDate), "yyyyMMdd");
         Calendar cal = Calendar.getInstance();
         return isDimanche(convert(cal, pDTDDate));
     }
 
-    /**
-     * Retourne vrai si la date passée en argument est un jour férié
-     *
-     * @param pDate
-     *
-     * @return <code>true</code> si le date est un jour férié officiel.
-     */
-    public static boolean isJourFerie(Date pDate) {
+    @Override
+    public boolean isJourFerie(Date pDate) {
+        DateValidator.checkValidite(pDate);
         boolean result = false;
         Calendar cal = Calendar.getInstance();
         cal.setTime(pDate);
@@ -236,27 +146,16 @@ public final class Ferie {
         return result;
     }
 
-    /**
-     * Retourne vrai si la date passée en argument est un jour férié
-     *
-     * @param pDTDDate Un entier correspondant à la date au format DTD (yyyyMMdd)
-     *
-     * @return <code>true</code> si le date est un jour férié officiel.
-     */
-    public static boolean isJourFerie(int pDTDDate) {
+    @Override
+    public boolean isJourFerie(int pDTDDate) {
+        DateValidator.checkValidite(Integer.toString(pDTDDate), "yyyyMMdd");
         Calendar cal = Calendar.getInstance();
         return isJourFerie(convert(cal, pDTDDate));
     }
 
-    /**
-     * Retourne vrai si la date passée en argument est un jour férié à l'État i.e. s'il s'agit d'un jour
-     * férié officiel ou d'un jours fermés (1er mai, 26 décembre, ....)
-     *
-     * @param pDate
-     *
-     * @return <code>true</code> si le date est un jour férié officiel.
-     */
-    public static boolean isJourEtatFerie(Date pDate) {
+    @Override
+    public boolean isJourEtatFerie(Date pDate) {
+        DateValidator.checkValidite(pDate);
         boolean result = false;
         Calendar cal = Calendar.getInstance();
         cal.setTime(pDate);
@@ -288,79 +187,41 @@ public final class Ferie {
         return result;
     }
 
-    /**
-     * Retourne vrai si la date passée en argument est un jour férié à l'État i.e. s'il s'agit d'un jour
-     * férié officiel ou d'un jours fermés (1er mai, 26 décembre, ....)
-     *
-     * @param pDTDDate Un entier correspondant à la date au format DTD (yyyyMMdd)
-     *
-     * @return <code>true</code> si le date est un jour férié officiel.
-     */
-    public static boolean isJourEtatFerie(int pDTDDate) {
+    @Override
+    public boolean isJourEtatFerie(int pDTDDate) {
+        DateValidator.checkValidite(Integer.toString(pDTDDate), "yyyyMMdd");
         Calendar cal = Calendar.getInstance();
         return isJourEtatFerie(convert(cal, pDTDDate));
     }
 
-    /**
-     * Cette méthode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est pas
-     * férié.
-     *
-     * @param pDate La date
-     *
-     * @return <code>true</code> si la date passée en paramètre est un jour ouvrable.
-     */
-    public static boolean isJourOuvrable(Date pDate) {
+    @Override
+    public boolean isJourOuvrable(Date pDate) {
+        DateValidator.checkValidite(pDate);
+        DateValidator.checkValidite(pDate);
         return !(isSamedi(pDate) || isDimanche(pDate) || isJourFerie(pDate));
     }
 
-    /**
-     * Cette méthode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est pas
-     * férié.
-     *
-     * @param pDtdDate Un entier correspondant à la date au format DTD (yyyyMMdd)
-     *
-     * @return <code>true</code> si la date passée en paramètre est un jour ouvrable.
-     */
-    public static boolean isJourOuvrable(int pDtdDate) {
+    @Override
+    public boolean isJourOuvrable(int pDtdDate) {
+        DateValidator.checkValidite(Integer.toString(pDtdDate), "yyyyMMdd");
         return !(isSamedi(pDtdDate) || isDimanche(pDtdDate) || isJourFerie(pDtdDate));
     }
 
-    /**
-     * Cette méthode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est ni un jour
-     * férié ni un jour fermé à l'État.
-     *
-     * @param pDate La date
-     *
-     * @return <code>true</code> si la date passée en paramètre est un jour ouvrable au sens de l'État..
-     */
-    public static boolean isJourEtatOuvrable(Date pDate) {
+    @Override
+    public boolean isJourEtatOuvrable(Date pDate) {
+        DateValidator.checkValidite(pDate);
         return !(isSamedi(pDate) || isDimanche(pDate) || isJourEtatFerie(pDate));
     }
 
-    /**
-     * Cette méthode retourne vrai si le jour est un jour de la semaine (hors samedi et dimanche) qui n'est ni un jour
-     * férié ni un jour fermé à l'État.
-     *
-     * @param pDtdDate Un entier correspondant à la date au format DTD (yyyyMMdd)
-     *
-     * @return <code>true</code> si la date passée en paramètre est un jour ouvrable au sens de l'État..
-     */
-    public static boolean isJourEtatOuvrable(int pDtdDate) {
+    @Override
+    public boolean isJourEtatOuvrable(int pDtdDate) {
+        DateValidator.checkValidite(Integer.toString(pDtdDate), "yyyyMMdd");
         return !(isSamedi(pDtdDate) || isDimanche(pDtdDate) || isJourEtatFerie(pDtdDate));
     }
 
-    /**
-     * Cette méthode permet d'obtenir la date d'un jour férié pour une année donnée. Par exemple, pour obtenir
-     * la date du jeudi de l'Ascension de l'année 2003, on appelera <code>getJourFerie(UtiFerie.ASCENSION,2003)
-     * </code>.
-     *
-     * @param pJourFerie Une des constantes <code>NOUVEL_AN, VENDREDI_SAINT, LUNDI_PAQUES, ASCENSION, LUNDI_PENTECOTE,
-     *                   FETE_NATIONALE, JEUNE_GENEVOIS, NOEL, RESTAURATION_REPUBLIQUE</code>.
-     * @param pAnnee     Une année comprise entre 0 et 10000.
-     *
-     * @return La date du jour férié
-     */
-    public static Date getJourFerie(int pJourFerie, int pAnnee) {
+    @Override
+    public Date getJourFerie(JourFerie pJourFerie, int pAnnee) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Date date = null;
         Calendar cal = Calendar.getInstance();
         setDefaultTime(cal);
@@ -380,7 +241,7 @@ public final class Ferie {
                 date = cal.getTime();
                 break;
 
-            case LUNDI_PAQUES:
+            case LUNDI_DE_PAQUES:
                 cal.setTime(getDatePaques(pAnnee));
                 cal.add(Calendar.DATE, ECART_LUNDI_PAQUES);
                 date = cal.getTime();
@@ -392,7 +253,7 @@ public final class Ferie {
                 date = cal.getTime();
                 break;
 
-            case LUNDI_PENTECOTE:
+            case LUNDI_DE_PENTECOTE:
                 cal.setTime(getDatePaques(pAnnee));
                 cal.add(Calendar.DATE, ECART_LUNDI_PENTECOTE_PAQUES);
                 date = cal.getTime();
@@ -414,7 +275,7 @@ public final class Ferie {
                 date = cal.getTime();
                 break;
 
-            case RESTAURATION_REPUBLIQUE:
+            case RESTAURATION_DE_LA_REPUBLIQUE:
                 cal.set(Calendar.DATE, RESTAURATION_JOUR);
                 cal.set(Calendar.MONTH, Calendar.DECEMBER);
                 date = cal.getTime();
@@ -427,32 +288,18 @@ public final class Ferie {
         return date;
     }
 
-    /**
-     * Cette méthode permet d'obtenir la date d'un jour férié pour une année donnée. Par exemple, pour obtenir
-     * la date du jeudi de l'Ascension de l'année 2003, on appelera <code>getJourDTDFerie(UtiFerie.ASCENSION,2003)
-     * </code>.
-     *
-     * @param pJourFerie Une des constantes <code>NOUVEL_AN, VENDREDI_SAINT, LUNDI_PAQUES, ASCENSION, LUNDI_PENTECOTE,
-     *                   FETE_NATIONALE, JEUNE_GENEVOIS, NOEL, RESTAURATION_REPUBLIQUE</code>
-     * @param pAnnee     Une année comprise entre 0 et 10000.
-     *
-     * @return Un entier : la date du jour férié au format DTD (yyyyMMdd)
-     */
-    public static int getJourDTDFerie(int pJourFerie, int pAnnee) {
+    @Override
+    public int getJourDTDFerie(JourFerie pJourFerie, int pAnnee) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Calendar cal = Calendar.getInstance();
         cal.setTime(getJourFerie(pJourFerie, pAnnee));
         return cal.get(Calendar.YEAR) * CONV_ANNEE_DTD + (cal.get(Calendar.MONTH) + 1) * CONV_MOIS_DTD + cal
                 .get(Calendar.DATE);
     }
 
-    /**
-     * Cet algorithme provient de l'ouvrage de Donald Knuth <i>Fundamental Algorithms</i>.
-     *
-     * @param pAnnee
-     *
-     * @return la date de Pâques (l'heure est fixàe à midi)
-     */
-    private static Date getDatePaques(int pAnnee) {
+    @Override
+    public Date getDatePaques(int pAnnee) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Calendar cal = Calendar.getInstance();
         int nombreOr = pAnnee % MOD_PAQUE + 1;
         int siecle = pAnnee / 100 + 1;
@@ -493,15 +340,9 @@ public final class Ferie {
         return cal.getTime();
     }
 
-    /**
-     * Cette méthode retourne la date du jeûne genevois pour une année donnée. Le jeûne genevois est le jeudi
-     * qui suit le premier dimanche de septembre.
-     *
-     * @param pAnnee
-     *
-     * @return la date du jeûne genevois
-     */
-    private static Date getJeuneGenevois(int pAnnee) {
+    @Override
+    public Date getJeuneGenevois(int pAnnee) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Calendar cal = Calendar.getInstance();
         setDefaultTime(cal);
         // On fixe le calendrier au 1er septembre de l'année passée en paramètre
@@ -517,16 +358,10 @@ public final class Ferie {
         return cal.getTime();
     }
 
-    /**
-     * Cette méthode retourne le tableau des jours fériés de l'année passée en paramètre. Le tableau est
-     * trià par ordre chronologique croissant.
-     *
-     * @param pAnnee
-     *
-     * @return le tableau des jours fériés
-     */
-    public static Date[] getJoursFeries(int pAnnee) {
-        Date[] dates = new Date[9];
+    @Override
+    public Map<JourFerie, Date> getJoursFeries(int pAnnee) {
+        DateValidator.checkAnneeValidite(pAnnee);
+        Map<JourFerie, Date> dates = new HashMap<>();
         Calendar cal = Calendar.getInstance();
         setDefaultTime(cal);
         // On commence par les dates fixes
@@ -535,75 +370,61 @@ public final class Ferie {
         cal.set(Calendar.DATE, 1);
         cal.set(Calendar.MONTH, Calendar.JANUARY);
         cal.set(Calendar.YEAR, pAnnee);
-        dates[NOUVEL_AN] = cal.getTime();
+        dates.put(NOUVEL_AN, cal.getTime());
 
-        // Fàte nationale
+        // Fête nationale
         cal.set(Calendar.MONTH, Calendar.AUGUST);
         cal.set(Calendar.YEAR, pAnnee);
-        dates[FETE_NATIONALE] = cal.getTime();
+        dates.put(FETE_NATIONALE, cal.getTime());
 
-        // Noàl
+        // Noël
         cal.set(Calendar.DATE, NOEL_JOUR);
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
         cal.set(Calendar.YEAR, pAnnee);
-        dates[NOEL] = cal.getTime();
+        dates.put(NOEL, cal.getTime());
 
-        // Restauration de la Ràpublique
+        // Restauration de la République
         cal.set(Calendar.DATE, RESTAURATION_JOUR);
-        dates[RESTAURATION_REPUBLIQUE] = cal.getTime();
+        dates.put(RESTAURATION_DE_LA_REPUBLIQUE, cal.getTime());
 
-        // On continue avec les dates qui dàpendent de la date de Pâques
-        // Vendredi saint
+        // On continue avec les dates qui dépendent de la date de Pâques
+
+        // Vendredi-saint
         cal.setTime(getDatePaques(pAnnee));
         cal.add(Calendar.DATE, ECART_VENDREDI_SAINT_PAQUES);
-        dates[VENDREDI_SAINT] = cal.getTime();
+        dates.put(VENDREDI_SAINT, cal.getTime());
+
         // Lundi de Pâques
         cal.add(Calendar.DATE, ECART_LUNDI_PAQUES - ECART_VENDREDI_SAINT_PAQUES);
-        dates[LUNDI_PAQUES] = cal.getTime();
+        dates.put(LUNDI_DE_PAQUES, cal.getTime());
+
         // Jeudi de l'Ascension
         cal.add(Calendar.DATE, ECART_ASCENSION_PAQUES - ECART_LUNDI_PAQUES);
-        dates[ASCENSION] = cal.getTime();
+        dates.put(ASCENSION, cal.getTime());
+
         // Lundi de Pentecôte
         cal.add(Calendar.DATE, ECART_LUNDI_PENTECOTE_PAQUES - ECART_ASCENSION_PAQUES);
-        dates[LUNDI_PENTECOTE] = cal.getTime();
+        dates.put(LUNDI_DE_PENTECOTE, cal.getTime());
 
         // Reste le jeûne genevois
-        dates[JEUNE_GENEVOIS] = getJeuneGenevois(pAnnee);
+        dates.put(JEUNE_GENEVOIS, getJeuneGenevois(pAnnee));
 
         return dates;
     }
 
-    /**
-     * Cette méthode retourne le tableau des jours fériés de l'année passée en paramètre. Le tableau est
-     * trià par ordre chronologique croissant.
-     *
-     * @param pAnnee
-     *
-     * @return le tableau des jours fériés au format DTD (yyyyMMdd)
-     */
-    public static int[] getJoursDTDFeries(int pAnnee) {
+    @Override
+    public Map<JourFerie, Integer> getJoursDTDFeries(int pAnnee) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Calendar cal = Calendar.getInstance();
-        Date[] dates = getJoursFeries(pAnnee);
-        int[] datesDTD = new int[dates.length];
-        for (int i = 0; i < dates.length; i++) {
-            datesDTD[i] = convert(cal, dates[i]);
-        }
-        return datesDTD;
+        Map<JourFerie, Date> dates = getJoursFeries(pAnnee);
+        return dates.entrySet().stream()
+                               .collect(Collectors.toMap(Map.Entry::getKey,
+                                                         e -> convert(cal, e.getValue())));
     }
 
-    /**
-     * Cette méthode retourne les jours fermés d'un mois donné et d'une année donnée. Les jours fermés ne
-     * sont pas des jours fériés officiels.
-     * <br>
-     * <strong>Attention</strong>, le paramètre pMois est le mois au sens du Calendar java
-     * <i>i.e.</i> Calendar.JANUARY = 0, .....
-     *
-     * @param pAnnee une année comprise entre 0 et 10000.
-     * @param pMois  Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
-     *
-     * @return Un tableau (qui peut être vide) contenant les jours fermés du mois.
-     */
-    public static Date[] getJoursEtatFermesDuMois(int pAnnee, int pMois) {
+    @Override
+    public Date[] getJoursEtatFermesDuMois(int pAnnee, int pMois) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Date[] dates = new Date[0];
         // Teste si les paramètres sont bien entre les bornes voulues
         if (pAnnee > -1 && pAnnee < ANNEE_MAX && pMois > -1 && pMois < NBR_MOIS) {
@@ -687,11 +508,13 @@ public final class Ferie {
         }
     }
 
-    private static List<Date> getJoursFermesParConseilEtat(int pAnnee, int pMois) {
+    @Override
+    public List<Date> getJoursFermesParConseilEtat(int pAnnee, int pMois) {
+        DateValidator.checkAnneeValidite(pAnnee);
         String[] tabJoursFermes = joursFermetureEtat.get(Integer.valueOf(pAnnee));
         if (tabJoursFermes == null) {
             //LECTURE des joursFermes format dd/MM/yyyy
-            tabJoursFermes = lecteurParam.getJoursFermes(pAnnee);
+            tabJoursFermes = fournisseurParametres.getJoursFermes(pAnnee);
             joursFermetureEtat.put(Integer.valueOf(pAnnee), tabJoursFermes);
         }
 
@@ -714,19 +537,9 @@ public final class Ferie {
         return listeJoursFermes;
     }
 
-    /**
-     * Cette méthode retourne les jours fermés d'un mois donné et d'une année donnée. Les jours fermés ne
-     * sont pas des jours fériés officiels.
-     * <br>
-     * <strong>Attention</strong>, le paramètre pMois est le mois au sens du Calendar java
-     * <i>i.e.</i> Calendar.JANUARY = 0, .....
-     *
-     * @param pAnnee une année comprise entre 0 et 10000.
-     * @param pMois  Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
-     *
-     * @return Un tableau (qui peut être vide) contenant les jours fériés du mois au format DTD (yyyyMMdd).
-     */
-    public static int[] getJoursDTDEtatFermesDuMois(int pAnnee, int pMois) {
+    @Override
+    public int[] getJoursDTDEtatFermesDuMois(int pAnnee, int pMois) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Calendar cal = Calendar.getInstance();
         // On cherche les dates au format java du mois pMois
         Date[] dates = getJoursEtatFermesDuMois(pAnnee, pMois);
@@ -738,18 +551,9 @@ public final class Ferie {
         return datesDTD;
     }
 
-    /**
-     * Cette méthode retourne les jours fériés d'un mois donné et d'une année donnée.
-     * <br>
-     * <strong>Attention</strong>, le paramètre pMois est le mois au sens du Calendar java
-     * <i>i.e.</i> Calendar.JANUARY = 0, .....
-     *
-     * @param pAnnee une année comprise entre 0 et 10000.
-     * @param pMois  Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
-     *
-     * @return Un tableau (qui peut être vide) contenant les jours fériés du mois.
-     */
-    public static Date[] getJoursFeriesDuMois(int pAnnee, int pMois) {
+    @Override
+    public Date[] getJoursFeriesDuMois(int pAnnee, int pMois) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Date[] dates = null;
         // Teste si les paramètres sont bien entre les bornes voulues
         if (pAnnee > -1 && pAnnee < ANNEE_MAX && pMois > -1 && pMois < NBR_MOIS) {
@@ -776,7 +580,7 @@ public final class Ferie {
                 if (Calendar.MARCH == cal.get(Calendar.MONTH)) {
                     // Cas où le vendredi saint est en mars
                     index = 1;
-                    lundiPaques = getJourFerie(LUNDI_PAQUES, pAnnee);
+                    lundiPaques = getJourFerie(LUNDI_DE_PAQUES, pAnnee);
                     cal.setTime(lundiPaques);
                     if (Calendar.MARCH == cal.get(Calendar.MONTH)) {
                         // Cas où le lundi de Pâques est aussi en mars
@@ -799,7 +603,7 @@ public final class Ferie {
                 cal = Calendar.getInstance();
                 index = 0;
                 vendrediSaint = getJourFerie(VENDREDI_SAINT, pAnnee);
-                lundiPaques = getJourFerie(LUNDI_PAQUES, pAnnee);
+                lundiPaques = getJourFerie(LUNDI_DE_PAQUES, pAnnee);
                 Ascension = null;
                 lundiPentecote = null;
                 cal.setTime(vendrediSaint);
@@ -816,7 +620,7 @@ public final class Ferie {
                         index = 2;
                     } else {
                         // Cas où le lundi de Pâques est au mois de mars
-                        lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
+                        lundiPentecote = getJourFerie(LUNDI_DE_PENTECOTE, pAnnee);
                         cal.setTime(lundiPentecote);
                         if (Calendar.APRIL == cal.get(Calendar.MONTH)) {
                             // Cas où le lundi de Pentecôte est au mois d'avril
@@ -857,7 +661,7 @@ public final class Ferie {
                 cal = Calendar.getInstance();
                 index = 0;
                 Ascension = getJourFerie(ASCENSION, pAnnee);
-                lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
+                lundiPentecote = getJourFerie(LUNDI_DE_PENTECOTE, pAnnee);
                 cal.setTime(Ascension);
                 if (Calendar.MAY == cal.get(Calendar.MONTH)) {
                     // Cas où l'Ascension est au mois de mai
@@ -894,7 +698,7 @@ public final class Ferie {
                 cal = Calendar.getInstance();
                 index = 0;
                 Ascension = getJourFerie(ASCENSION, pAnnee);
-                lundiPentecote = getJourFerie(LUNDI_PENTECOTE, pAnnee);
+                lundiPentecote = getJourFerie(LUNDI_DE_PENTECOTE, pAnnee);
                 cal.setTime(Ascension);
                 if (Calendar.JUNE == cal.get(Calendar.MONTH)) {
                     // Cas où l'Ascension est au mois de juin, alors forcément le lundi de Pentecôte
@@ -935,7 +739,7 @@ public final class Ferie {
                 // 2 jours fériés : Noël et le 31 décembre (Restauration de la République)
                 dates = new Date[2];
                 dates[0] = getJourFerie(NOEL, pAnnee);
-                dates[1] = getJourFerie(RESTAURATION_REPUBLIQUE, pAnnee);
+                dates[1] = getJourFerie(RESTAURATION_DE_LA_REPUBLIQUE, pAnnee);
                 break;
 
             default:
@@ -951,18 +755,9 @@ public final class Ferie {
         }
     }
 
-    /**
-     * Cette méthode retourne les jours fériés d'un mois donné et d'une année donnée.
-     * <br>
-     * <strong>Attention</strong>, le paramètre pMois est le mois au sens du Calendar java
-     * <i>i.e.</i> Calendar.JANUARY = 0, .....
-     *
-     * @param pAnnee une année comprise entre 0 et 10000.
-     * @param pMois  Un mois au sens java <i>i.e.</i> Calendar.JANUARY = 0, ..
-     *
-     * @return Un tableau (qui peut être vide) contenant les jours fériés du mois au format DTD (yyyyMMdd).
-     */
-    public static int[] getJoursDTDFeriesDuMois(int pAnnee, int pMois) {
+    @Override
+    public int[] getJoursDTDFeriesDuMois(int pAnnee, int pMois) {
+        DateValidator.checkAnneeValidite(pAnnee);
         Calendar cal = Calendar.getInstance();
         int[] datesDTD = new int[0];
         // On cherche les dates au format jav du mois pMois
@@ -977,18 +772,9 @@ public final class Ferie {
         return datesDTD;
     }
 
-    /**
-     * Cette méthode retourne la date passée en paramètre (pDate) à laquelle on a ajouté pNbreJoursOuvrables
-     * jours ouvrables. Les jours ouvrables sont les jours de la semaine excepté le samedi, le dimanche, les jours
-     * fériés et les jours fermés à l'État. Par exemple, si pDate représente le 23 décembre 2004, l'appel
-     * addJoursOuvrables(pDate,6) doit retourner le 10 janvier 2005.
-     *
-     * @param pDate               La date à laquelle on veut ajouter des jours ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter ou soustraire.
-     *
-     * @return pDate augmentàe de pNbreJoursOuvrables
-     */
-    public static Date addJoursEtatOuvrables(final Date pDate, final int pNbreJoursOuvrables) {
+    @Override
+    public Date addJoursEtatOuvrables(final Date pDate, final int pNbreJoursOuvrables) {
+        DateValidator.checkValidite(pDate);
         Calendar cal = Calendar.getInstance();
         cal.setTime(pDate);
         int compteurJoursOuvrables = 0;
@@ -1021,35 +807,16 @@ public final class Ferie {
         return cal.getTime();
     }
 
-    /**
-     * Cette méthode retourne la date passée en paramètre (pDate) à laquelle on a ajouté pNbreJoursOuvrables
-     * jours ouvrables. Les jours ouvrables sont les jours de la semaine excepté le samedi, le dimanche, les jours
-     * fériés et les jours fermés à l'État. Par exemple, si pDate représente le 23 décembre 2004, l'appel
-     * addJoursOuvrables(pDate,6) doit retourner le 10 janvier 2005.
-     *
-     * @param pDTDDate            Un entier : la date au format DTD (yyyyMMdd) à laquelle on veut ajouter des jours
-     *                            ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter. Ce nombre doit être &gt;=0.
-     *
-     * @return Un entier : pDate augmentàe de pNbreJoursOuvrables au format DTD (yyyyMMdd)
-     */
-    public static int addJoursEtatOuvrables(final int pDTDDate, final int pNbreJoursOuvrables) {
+    @Override
+    public int addJoursEtatOuvrables(final int pDTDDate, final int pNbreJoursOuvrables) {
+        DateValidator.checkValidite(Integer.toString(pDTDDate), "yyyyMMdd");
         Calendar cal = Calendar.getInstance();
         return convert(cal, addJoursEtatOuvrables(convert(cal, pDTDDate), pNbreJoursOuvrables));
     }
 
-    /**
-     * Cette méthode retourne la date passée en paramètre (pDate) à laquelle on a ajouté pNbreJoursOuvrables
-     * jours ouvrables. Les jours ouvrables sont les jours de la semaine exceptés le samedi, le dimanche et les jours
-     * fériés officiels. Par exemple, si pDate représente le 23 décembre 2004, l'appel
-     * addJoursOuvrables(pDate,6) doit retourner le 2 janvier 2005.
-     *
-     * @param pDate               La date à laquelle on veut ajouter des jours ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter ou soustraire
-     *
-     * @return pDate augmentàe de pNbreJoursOuvrables
-     */
-    public static Date addJoursOuvrables(final Date pDate, final int pNbreJoursOuvrables) {
+    @Override
+    public Date addJoursOuvrables(final Date pDate, final int pNbreJoursOuvrables) {
+        DateValidator.checkValidite(pDate);
         Calendar cal = Calendar.getInstance();
         cal.setTime(pDate);
         int compteurJoursOuvrables = 0;
@@ -1082,32 +849,16 @@ public final class Ferie {
         return cal.getTime();
     }
 
-    /**
-     * Cette méthode retourne la date passée en paramètre (pDate) à laquelle on a ajouté pNbreJoursOuvrables
-     * jours ouvrables. Les jours ouvrables sont les jours de la semaine exceptés le samedi, le dimanche et les jours
-     * fériés officiels. Par exemple, si pDate représente le 23 décembre 2004, l'appel
-     * addJoursOuvrables(pDate,6) doit retourner le 2 janvier 2005.
-     *
-     * @param pDTDDate            Un entier : la date au format DTD (yyyyMMdd) à laquelle on veut ajouter des jours
-     *                            ouvrables
-     * @param pNbreJoursOuvrables Le nombre de jours ouvrables à ajouter. Ce nombre doit être &gt;=0.
-     *
-     * @return Un entier : pDate augmentàe de pNbreJoursOuvrables au format DTD (yyyyMMdd)
-     */
-    public static int addJoursOuvrables(final int pDTDDate, final int pNbreJoursOuvrables) {
+    @Override
+    public int addJoursOuvrables(final int pDTDDate, final int pNbreJoursOuvrables) {
+        DateValidator.checkValidite(Integer.toString(pDTDDate), "yyyyMMdd");
         Calendar cal = Calendar.getInstance();
         return convert(cal, addJoursOuvrables(convert(cal, pDTDDate), pNbreJoursOuvrables));
     }
 
-    /**
-     * Cette méthode retourne la prochaine date suivant la date donnée en paramètre qui est un jour ouvrable. Si
-     * la date donnée en paramètre est un jour ouvrable, c'est cette màme date qui est retournàe.
-     *
-     * @param pDate La date à partir de laquelle on veut le prochain jour ouvrable
-     *
-     * @return La date suivant la date donnée en paramètre qui est ouvrable.
-     */
-    public static Date getProchainJourOuvrable(final Date pDate) {
+    @Override
+    public Date getProchainJourOuvrable(final Date pDate) {
+        DateValidator.checkValidite(pDate);
         Calendar cal = Calendar.getInstance();
         cal.setTime(pDate);
         Date date = pDate;
@@ -1118,30 +869,16 @@ public final class Ferie {
         return cal.getTime();
     }
 
-    /**
-     * Cette méthode retourne la prochaine date suivant la date donnée en paramètre qui est un jour ouvrable. Si
-     * la date donnée en paramètre est un jour ouvrable, c'est cette màme date qui est retournàe.
-     *
-     * @param pDTDDate Un entier : la date au format DTD (yyyyMMdd) à partir de laquelle on veut le prochain jour
-     *                 ouvrable
-     *
-     * @return La date au format DTD (yyyyMMdd) suivant la date donnée en paramètre qui est ouvrable.
-     */
-    public static int getProchainJourOuvrable(final int pDTDDate) {
+    @Override
+    public int getProchainJourOuvrable(final int pDTDDate) {
+        DateValidator.checkValidite(Integer.toString(pDTDDate), "yyyyMMdd");
         Calendar cal = Calendar.getInstance();
         return convert(cal, getProchainJourOuvrable(convert(cal, pDTDDate)));
     }
 
-    /**
-     * Cette méthode retourne la prochaine date suivant la date donnée en paramètre qui est un jour ouvrable à
-     * l'État de Genàve. Si la date donnée en paramètre est un jour ouvrable, c'est cette màme date qui est
-     * retournàe.
-     *
-     * @param pDate La date à partir de laquelle on veut le prochain jour ouvrable (pour l'État)
-     *
-     * @return La date suivant la date donnée en paramètre qui est ouvrable.
-     */
-    public static Date getProchainJourEtatOuvrable(final Date pDate) {
+    @Override
+    public Date getProchainJourEtatOuvrable(final Date pDate) {
+        DateValidator.checkValidite(pDate);
         Calendar cal = Calendar.getInstance();
         cal.setTime(pDate);
         Date date = pDate;
@@ -1152,17 +889,9 @@ public final class Ferie {
         return cal.getTime();
     }
 
-    /**
-     * Cette méthode retourne la prochaine date suivant la date donnée en paramètre qui est un jour ouvrable à
-     * l'État de Genàve. Si la date donnée en paramètre est un jour ouvrable, c'est cette màme date qui est
-     * retournàe.
-     *
-     * @param pDTDDate Un entier : la date au format DTD (yyyyMMdd) à partir de laquelle on veut le prochain jour
-     *                 ouvrable (pour l'État)
-     *
-     * @return La date au format DTD (yyyyMMdd) suivant la date donnée en paramètre qui est ouvrable.
-     */
-    public static int getProchainJourEtatOuvrable(final int pDTDDate) {
+    @Override
+    public int getProchainJourEtatOuvrable(final int pDTDDate) {
+        DateValidator.checkValidite(Integer.toString(pDTDDate), "yyyyMMdd");
         Calendar cal = Calendar.getInstance();
         return convert(cal, getProchainJourEtatOuvrable(convert(cal, pDTDDate)));
     }
@@ -1210,12 +939,4 @@ public final class Ferie {
         return pCal.getTime();
     }
 
-    /**
-     * Permet de définir le lecteur des paramètres
-     *
-     * @param lecteur
-     */
-    public static void init(FournisseurParametres lecteur) {
-        lecteurParam = lecteur;
-    }
 }

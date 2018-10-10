@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.ge.cti.ct.FerieGeneve.persistance;
+package ch.ge.cti.ct.joursferies.persistance;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,17 +33,17 @@ import org.slf4j.LoggerFactory;
  *
  * @author pinaudj
  */
-public final class LectureConfig implements FournisseurParametres {
+public final class LecteurParametres implements FournisseurParametres {
 
     private Properties prop;
 
-    private static final Logger LOG = LoggerFactory.getLogger(LectureConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LecteurParametres.class);
 
     /**
      * Constructeur par défaut.
      * Trouve et lit le fichier jours-feries.properties
      */
-    public LectureConfig() {
+    public LecteurParametres() {
         File file;
         prop = new Properties();
 

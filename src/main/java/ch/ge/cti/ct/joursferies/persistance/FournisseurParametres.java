@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.ge.cti.ct.FerieGeneve.persistance;
+package ch.ge.cti.ct.joursferies.persistance;
 
 /**
  * <p>
@@ -30,5 +30,6 @@ public interface FournisseurParametres {
      * Retourne la liste des jours fermés à l´État, pour une année donnée.
      * @return la liste des jours fermés au format dd/MM
      */
-    public String[] getJoursFermes(int annee);
+    String[] getJoursFermes(int annee);
+
 }
