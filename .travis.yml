@@ -1,0 +1,19 @@
+language: java
+install: true
+
+addons:
+  sonarcloud:
+    organization: "etat-de-geneve-github"
+    token:
+      secure: 2b3b12f9df9593d7276b3d219d1cecc5cb3025dd
+
+jdk:
+  - oraclejdk8
+
+script:
+  - mvn clean install sonar:sonar
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'

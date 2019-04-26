@@ -39,7 +39,7 @@
 
     <ciManagement>
         <system>jenkins</system>
-        <url>https://***REMOVED***/view/Composants métier communs/job/jours-feries</url>
+        <url>https://***REMOVED***/job/jours-feries</url>
     </ciManagement>
 
     <distributionManagement>
