@@ -2,10 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--
-        Ce projet n'utilise pas Spring. Il hérite de spring-boot-dependencies uniquement pour simplifier la
-        gestion des versions des plugins et des dépendances.
-      -->
+    <!-- Ce projet n'utilise pas Spring. Il hérite de spring-boot-dependencies uniquement pour simplifier la -->
+    <!-- gestion des versions des plugins et des dépendances. -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -56,9 +54,7 @@
     </distributionManagement>
 
     <properties>
-        <!-- versions des plugins -->
-        <javacoco-maven-plugin.version>0.8.2</javacoco-maven-plugin.version>
-        <!-- autres propriétés -->
+        <javacoco-maven-plugin.version>0.8.3</javacoco-maven-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -105,22 +101,11 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${javacoco-maven-plugin.version}</version>
-                <configuration>
-                    <append>true</append>
-                    <destFile>target/jacoco.exec</destFile>
-                </configuration>
                 <executions>
                     <execution>
                         <id>agent-for-unit-tests</id>
                         <goals>
                             <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
