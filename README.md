@@ -1,6 +1,6 @@
 # 1. Propos
 
-La bibliothèque jours-feries fournit la liste des jours fériés et des jours fermés à l'État de Genève.
+La bibliothèque jours-feries fournit la liste des jours fériés et des jours fermés à l'État de Genève. 
 
 # 2. Description
 
