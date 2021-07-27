@@ -1,3 +1,19 @@
+Build GitHub :
+
+[![Build with GitHub](https://github.com/republique-et-canton-de-geneve/jours-feries/actions/workflows/maven.yml/badge.svg)](https://github.com/republique-et-canton-de-geneve/jours-feries/actions/workflows/maven.yml)
+
+Analyse SonarCloud :
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ch.ge.cti.ct%3Ajours-feries&metric=bugs)](https://sonarcloud.io/dashboard?id=ch.ge.cti.ct%3Ajours-feries)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ch.ge.cti.ct%3Ajours-feries&metric=code_smells)](https://sonarcloud.io/dashboard?id=ch.ge.cti.ct%3Ajours-feries)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ch.ge.cti.ct%3Ajours-feries&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=ch.ge.cti.ct%3Ajours-feries)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ch.ge.cti.ct%3Ajours-feries&metric=coverage)](https://sonarcloud.io/dashboard?id=ch.ge.cti.ct%3Ajours-feries)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ch.ge.cti.ct%3Ajours-feries&metric=alert_status)](https://sonarcloud.io/dashboard?id=ch.ge.cti.ct%3Ajours-feries)
+
+Licence :
+
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/why-affero-gpl.html)
+
 # 1. Propos
 
 La bibliothèque jours-feries fournit la liste des jours fériés et des jours fermés à l'État de Genève. 

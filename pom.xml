@@ -18,11 +18,6 @@
 
     <url>https://***REMOVED***</url>
 
-    <organization>
-        <name>DGSIN</name>
-        <url>http://www.ge.ch/dgsi</url>
-    </organization>
-
     <scm>
         <connection>scm:git:https://***REMOVED***/Communs/jours-feries.git</connection>
         <developerConnection>
@@ -54,7 +49,7 @@
     </distributionManagement>
 
     <properties>
-        <javacoco-maven-plugin.version>0.8.3</javacoco-maven-plugin.version>
+        <javacoco-maven-plugin.version>0.8.7</javacoco-maven-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -62,6 +57,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -103,9 +103,16 @@
                 <version>${javacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>agent-for-unit-tests</id>
+                        <id>jacoco-prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -114,3 +121,4 @@
     </build>
 
 </project>
+
