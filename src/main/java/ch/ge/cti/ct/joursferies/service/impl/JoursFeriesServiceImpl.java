@@ -88,10 +88,6 @@ public final class JoursFeriesServiceImpl implements JoursFeriesService {
 
     private static Map<Integer, String[]> joursFermetureEtat = new HashMap<>();
 
-    public JoursFeriesServiceImpl() {
-        this.fournisseurParametres = fournisseurParametres;
-    }
-
     public void setFournisseurParametres(FournisseurParametres fournisseurParametres) {
         this.fournisseurParametres = fournisseurParametres;
     }
