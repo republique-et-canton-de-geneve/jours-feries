@@ -10,7 +10,7 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    - cron: '45 3 * * WED'
+    - cron: '45 3 15 * *'
 
 jobs:
   build-and-sonar:
