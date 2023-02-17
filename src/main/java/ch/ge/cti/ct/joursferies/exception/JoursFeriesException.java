@@ -1,7 +1,7 @@
 package ch.ge.cti.ct.joursferies.exception;
 
 /**
- * Exception levée en cas d'erreur technique rencontrée par un service.
+ * Exception levée en cas d'erreur technique rencontrée par un service. 
  */
 public class JoursFeriesException extends RuntimeException {
 
